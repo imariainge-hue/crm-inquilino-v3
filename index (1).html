@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRM Inquilino</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0F1923; font-family: 'Inter', system-ui, sans-serif; color: #E8EDF2; }
+    .app { display: flex; height: 100vh; overflow: hidden; }
+    .sidebar { width: 220px; background: #111D2B; border-right: 1px solid #1E2D3D; display: flex; flex-direction: column; flex-shrink: 0; }
+    .logo { padding: 24px 20px 16px; border-bottom: 1px solid #1E2D3D; }
+    .logo h1 { font-size: 15px; font-weight: 700; color: #00C49F; letter-spacing: 0.02em; }
+    .logo p { font-size: 11px; color: #4A6480; margin-top: 2px; }
+    .nav { padding: 12px 8px; flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; background: transparent; color: #8AA5BE; font-weight: 400; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.15s; }
+    .nav-item:hover { background: #1A2D40; color: #C8D8E8; }
+    .nav-item.active { background: #1A2D40; color: #00C49F; font-weight: 600; }
+    .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sync-time { padding: 12px 20px; font-size: 10px; color: #2A4A60; border-top: 1px solid #1E2D3D; }
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .header { padding: 20px 28px; border-bottom: 1px solid #1E2D3D; display: flex; align-items: center; justify-content: space-between; }
+    .header h2 { font-size: 20px; font-weight: 700; }
+    .sync-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #00C49F; padding: 7px 16px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
+    .content { flex: 1; overflow: auto; padding: 28px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .kpi-card { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; padding: 18px 20px; }
+    .kpi-value { font-size: 28px; font-weight: 700; line-height: 1; }
+    .kpi-label { font-size: 11px; color: #4A6480; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .section-title { font-size: 13px; font-weight: 700; color: #4A6480; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; margin-top: 0; }
+    .table-wrap { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; overflow: hidden; margin-bottom: 28px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 10px 14px; font-size: 11px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #1E2D3D; font-weight: 600; }
+    td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid #131F2B; color: #C8D8E8; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-green { color: #00C49F; background: #00C49F15; }
+    .badge-yellow { color: #F6C90E; background: #F6C90E15; }
+    .badge-red { color: #FF6B6B; background: #FF6B6B15; }
+    .badge-blue { color: #4A9EFF; background: #4A9EFF15; }
+    .alert { border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; }
+    .alert-yellow { background: #F6C90E10; border: 1px solid #F6C90E30; color: #F6C90E; }
+    .alert-red { background: #FF6B6B10; border: 1px solid #FF6B6B30; color: #FF6B6B; }
+    .alert a { color: inherit; cursor: pointer; text-decoration: underline; }
+    .empty { text-align: center; padding: 40px; color: #4A6480; font-size: 13px; }
+    .config-box { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; padding: 24px; max-width: 500px; }
+    label { font-size: 12px; color: #4A6480; margin-bottom: 4px; display: block; margin-top: 12px; }
+    input { width: 100%; background: #0F1923; border: 1px solid #1E2D3D; border-radius: 8px; padding: 9px 12px; color: #E8EDF2; font-size: 13px; }
+    input:focus { outline: 1px solid #00C49F; }
+    .save-btn { background: #00C49F; border: none; color: #0F1923; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 16px; }
+    .hint { font-size: 11px; color: #4A6480; margin-top: 12px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+const fetchSheet = async (sheet, sheetId, apiKey) => {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Error al leer ${sheet}`);
+  const data = await res.json();
+  const [headers, ...rows] = data.values || [];
+  return rows.map(row => Object.fromEntries((headers||[]).map((h,i) => [h, row[i]||''])));
+};
+
+const Badge = ({ estado }) => {
+  const map = {
+    'Al día': 'green', 'Pagado': 'green', 'Resuelto': 'green',
+    'Pendiente': 'yellow', 'Abierto': 'yellow',
+    'Vencido': 'red', 'Urgente': 'red',
+    'En proceso': 'blue',
+  };
+  const cls = map[estado] || 'blue';
+  return <span className={`badge badge-${cls}`}>{estado || '—'}</span>;
+};
+
+const NAV = [
+  { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+  { id: 'inquilinos', label: 'Inquilinos', icon: '👥' },
+  { id: 'propiedades', label: 'Propiedades', icon: '🏠' },
+  { id: 'pagos', label: 'Pagos', icon: '💰' },
+  { id: 'reclamos', label: 'Reclamos', icon: '🔧' },
+  { id: 'config', label: 'Configuración', icon: '⚙️' },
+];
+
+function Dashboard({ data }) {
+  const pagosAlert = (data.pagos||[]).filter(p => p.ESTADO==='Vencido'||p.ESTADO==='Pendiente').length;
+  const reclamosActivos = (data.reclamos||[]).filter(r => r.ESTADO==='Abierto'||r.ESTADO==='Urgente'||r.ESTADO==='En proceso').length;
+  const urgentes = (data.reclamos||[]).filter(r => r.ESTADO==='Urgente').length;
+
+  const kpis = [
+    { label: 'Inquilinos activos', value: (data.inquilinos||[]).length, color: '#4A9EFF' },
+    { label: 'Propiedades', value: (data.propiedades||[]).length, color: '#00C49F' },
+    { label: 'Pagos pendientes/vencidos', value: pagosAlert, color: pagosAlert > 0 ? '#FF6B6B' : '#00C49F' },
+    { label: 'Reclamos activos', value: reclamosActivos, color: reclamosActivos > 0 ? '#F6C90E' : '#00C49F' },
+  ];
+  if (urgentes > 0) kpis.push({ label: '🚨 Reclamos urgentes', value: urgentes, color: '#FF6B6B' });
+
+  return <>
+    <div className="kpi-grid">
+      {kpis.map((k,i) => (
+        <div key={i} className="kpi-card" style={{ borderTop: `3px solid ${k.color}` }}>
+          <div className="kpi-value" style={{ color: k.color }}>{k.value}</div>
+          <div className="kpi-label">{k.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <p className="section-title">Últimos reclamos</p>
+    <div className="table-wrap">
+      <table>
+        <thead><tr>{['Propiedad','Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <tbody>
+          {(data.reclamos||[]).slice(0,5).map((r,i)=>(
+            <tr key={i}>
+              <td>{r.PROPIEDAD||r.DIRECCION||'—'}</td>
+              <td>{r.INQUILINO||r.NOMBRE||'—'}</td>
+              <td>{r.DESCRIPCION||r.RECLAMO||'—'}</td>
+              <td><Badge estado={r.ESTADO}/></td>
+              <td>{r.FECHA||'—'}</td>
+            </tr>
+          ))}
+          {!(data.reclamos||[]).length && <tr><td colSpan="5" className="empty">Sin reclamos registrados</td></tr>}
+        </tbody>
+      </table>
+    </div>
+
+    <p className="section-title">Últimos pagos</p>
+    <div className="table-wrap">
+      <table>
+        <thead><tr>{['Inquilino','Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <tbody>
+          {(data.pagos||[]).slice(0,5).map((p,i)=>(
+            <tr key={i}>
+              <td>{p.INQUILINO||p.NOMBRE||'—'}</td>
+              <td>{p.PROPIEDAD||p.DIRECCION||'—'}</td>
+              <td>${p.MONTO||'—'}</td>
+              <td>{p.PERIODO||p.MES||'—'}</td>
+              <td><Badge estado={p.ESTADO}/></td>
+            </tr>
+          ))}
+          {!(data.pagos||[]).length && <tr><td colSpan="5" className="empty">Sin pagos registrados</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </>;
+}
+
+function TableView({ rows }) {
+  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos para mostrar</div></div>;
+  const headers = Object.keys(rows[0]);
+  return (
+    <div className="table-wrap">
+      <table>
+        <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <tbody>
+          {rows.map((row,i)=>(
+            <tr key={i}>
+              {headers.map(h=>(
+                <td key={h}>{h==='ESTADO' ? <Badge estado={row[h]}/> : (row[h]||'—')}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function Config({ creds, onSave }) {
+  const [sheetId, setSheetId] = useState(creds.sheetId||'');
+  const [apiKey, setApiKey] = useState(creds.apiKey||'');
+  return (
+    <div className="config-box">
+      <p className="section-title" style={{marginTop:0}}>Conexión con Google Sheets</p>
+      <label>Sheet ID</label>
+      <input value={sheetId} onChange={e=>setSheetId(e.target.value)} placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"/>
+      <label>API Key</label>
+      <input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIzaSy..."/>
+      <br/>
+      <button className="save-btn" onClick={()=>onSave({sheetId,apiKey})}>Guardar y conectar</button>
+      <p className="hint">
+        El Sheet ID está en la URL de tu Google Sheet.<br/>
+        Las hojas deben llamarse: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.
+      </p>
+    </div>
+  );
+}
+
+function App() {
+  const [view, setView] = useState('dashboard');
+  const [data, setData] = useState({inquilinos:[],propiedades:[],pagos:[],reclamos:[]});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [lastSync, setLastSync] = useState(null);
+  const [creds, setCreds] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('crm_creds')||'{}'); } catch { return {}; }
+  });
+
+  const sync = useCallback(async () => {
+    if (!creds.sheetId || !creds.apiKey) return;
+    setLoading(true); setError(null);
+    try {
+      const [inquilinos, propiedades, pagos, reclamos] = await Promise.all([
+        fetchSheet('INQUILINOS', creds.sheetId, creds.apiKey),
+        fetchSheet('PROPIEDADES', creds.sheetId, creds.apiKey),
+        fetchSheet('PAGOS', creds.sheetId, creds.apiKey),
+        fetchSheet('RECLAMOS', creds.sheetId, creds.apiKey),
+      ]);
+      setData({inquilinos,propiedades,pagos,reclamos});
+      setLastSync(new Date().toLocaleTimeString('es-AR'));
+    } catch(e) { setError(e.message); }
+    setLoading(false);
+  }, [creds]);
+
+  useEffect(() => { sync(); }, [sync]);
+
+  const saveCreds = (c) => {
+    setCreds(c);
+    localStorage.setItem('crm_creds', JSON.stringify(c));
+    setView('dashboard');
+  };
+
+  const titles = { dashboard:'Resumen general', inquilinos:'Inquilinos', propiedades:'Propiedades', pagos:'Pagos', reclamos:'Reclamos', config:'Configuración' };
+
+  return (
+    <div className="app">
+      <aside className="sidebar">
+        <div className="logo">
+          <h1>CRM Inquilino</h1>
+          <p>Gestión de alquileres</p>
+        </div>
+        <nav className="nav">
+          {NAV.map(item => (
+            <button key={item.id} className={`nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
+              <span className="nav-icon">{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        {lastSync && <div className="sync-time">Última sync: {lastSync}</div>}
+      </aside>
+
+      <main className="main">
+        <div className="header">
+          <h2>{titles[view]}</h2>
+          <button className="sync-btn" onClick={sync} disabled={loading}>
+            {loading ? '⏳ Sincronizando...' : '🔄 Sincronizar'}
+          </button>
+        </div>
+
+        <div className="content">
+          {error && <div className="alert alert-red">⚠️ {error} — Verificá las credenciales en Configuración.</div>}
+          {!creds.sheetId && view!=='config' && (
+            <div className="alert alert-yellow">
+              ⚙️ Configurá tu Google Sheet antes de continuar. <a onClick={()=>setView('config')}>Ir a Configuración</a>
+            </div>
+          )}
+          {view==='dashboard' && <Dashboard data={data}/>}
+          {view==='inquilinos' && <TableView rows={data.inquilinos}/>}
+          {view==='propiedades' && <TableView rows={data.propiedades}/>}
+          {view==='pagos' && <TableView rows={data.pagos}/>}
+          {view==='reclamos' && <TableView rows={data.reclamos}/>}
+          {view==='config' && <Config creds={creds} onSave={saveCreds}/>}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
