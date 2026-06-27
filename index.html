@@ -70,10 +70,10 @@ const fetchSheet = async (sheet, sheetId, apiKey) => {
 
 const Badge = ({ estado }) => {
   const map = {
-    'Al día': 'green', 'Pagado': 'green', 'Resuelto': 'green',
-    'Pendiente': 'yellow', 'Abierto': 'yellow',
-    'Vencido': 'red', 'Urgente': 'red',
-    'En proceso': 'blue',
+    'Al día': 'green', 'PAGADO': 'green', 'Pagado': 'green', 'Resuelto': 'green',
+    'PENDIENTE': 'yellow', 'Pendiente': 'yellow', 'Abierto': 'yellow',
+    'VENCIDO': 'red', 'Vencido': 'red', 'Urgente': 'red',
+    'En procesos': 'blue', 'En proceso': 'blue',
   };
   const cls = map[estado] || 'blue';
   return <span className={`badge badge-${cls}`}>{estado || '—'}</span>;
@@ -89,8 +89,8 @@ const NAV = [
 ];
 
 function Dashboard({ data }) {
-  const pagosAlert = (data.pagos||[]).filter(p => p.ESTADO==='Vencido'||p.ESTADO==='Pendiente').length;
-  const reclamosActivos = (data.reclamos||[]).filter(r => r.ESTADO==='Abierto'||r.ESTADO==='Urgente'||r.ESTADO==='En proceso').length;
+  const pagosAlert = (data.pagos||[]).filter(p => p.ESTADO==='VENCIDO'||p.ESTADO==='PENDIENTE'||p.ESTADO==='Vencido'||p.ESTADO==='Pendiente').length;
+  const reclamosActivos = (data.reclamos||[]).filter(r => r.ESTADO==='Abierto'||r.ESTADO==='Urgente'||r.ESTADO==='En procesos'||r.ESTADO==='En proceso').length;
   const urgentes = (data.reclamos||[]).filter(r => r.ESTADO==='Urgente').length;
 
   const kpis = [
@@ -114,18 +114,18 @@ function Dashboard({ data }) {
     <p className="section-title">Últimos reclamos</p>
     <div className="table-wrap">
       <table>
-        <thead><tr>{['Propiedad','Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <thead><tr>{['ID Propiedad','ID Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
         <tbody>
-          {(data.reclamos||[]).slice(0,5).map((r,i)=>(
+          {(data.reclamos||[]).filter(r=>r.DESCRIPCION).slice(0,5).map((r,i)=>(
             <tr key={i}>
-              <td>{r.PROPIEDAD||r.DIRECCION||'—'}</td>
-              <td>{r.INQUILINO||r.NOMBRE||'—'}</td>
-              <td>{r.DESCRIPCION||r.RECLAMO||'—'}</td>
+              <td>{r['ID PROPIEDAD']||'—'}</td>
+              <td>{r['ID INQUILINO']||'—'}</td>
+              <td>{r.DESCRIPCION||'—'}</td>
               <td><Badge estado={r.ESTADO}/></td>
               <td>{r.FECHA||'—'}</td>
             </tr>
           ))}
-          {!(data.reclamos||[]).length && <tr><td colSpan="5" className="empty">Sin reclamos registrados</td></tr>}
+          {!(data.reclamos||[]).filter(r=>r.DESCRIPCION).length && <tr><td colSpan="5" className="empty">Sin reclamos registrados</td></tr>}
         </tbody>
       </table>
     </div>
@@ -133,18 +133,18 @@ function Dashboard({ data }) {
     <p className="section-title">Últimos pagos</p>
     <div className="table-wrap">
       <table>
-        <thead><tr>{['Inquilino','Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <thead><tr>{['Nombre Inquilino','ID Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
         <tbody>
-          {(data.pagos||[]).slice(0,5).map((p,i)=>(
+          {(data.pagos||[]).filter(p=>p.MONTO).slice(0,5).map((p,i)=>(
             <tr key={i}>
-              <td>{p.INQUILINO||p.NOMBRE||'—'}</td>
-              <td>{p.PROPIEDAD||p.DIRECCION||'—'}</td>
-              <td>${p.MONTO||'—'}</td>
-              <td>{p.PERIODO||p.MES||'—'}</td>
+              <td>{p['nombre inquilino']||p['NOMBRE INQUILINO']||p['ID INQUILINO']||'—'}</td>
+              <td>{p['ID PROPIEDAD']||'—'}</td>
+              <td>{p.MONTO||'—'}</td>
+              <td>{p['MES CORRESPONDIENTE']||'—'}</td>
               <td><Badge estado={p.ESTADO}/></td>
             </tr>
           ))}
-          {!(data.pagos||[]).length && <tr><td colSpan="5" className="empty">Sin pagos registrados</td></tr>}
+          {!(data.pagos||[]).filter(p=>p.MONTO).length && <tr><td colSpan="5" className="empty">Sin pagos registrados</td></tr>}
         </tbody>
       </table>
     </div>
