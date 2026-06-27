@@ -9,77 +9,162 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0F1923; font-family: 'Inter', system-ui, sans-serif; color: #E8EDF2; }
+    body { font-family: 'Inter', system-ui, sans-serif; transition: background 0.2s, color 0.2s; }
+
+    /* DARK MODE (default) */
+    body.dark { background: #0F1923; color: #E8EDF2; }
+    body.dark .sidebar { background: #111D2B; border-right: 1px solid #1E2D3D; }
+    body.dark .logo { border-bottom: 1px solid #1E2D3D; }
+    body.dark .logo h1 { color: #00C49F; }
+    body.dark .logo p { color: #4A6480; }
+    body.dark .nav-item { color: #8AA5BE; }
+    body.dark .nav-item:hover { background: #1A2D40; color: #C8D8E8; }
+    body.dark .nav-item.active { background: #1A2D40; color: #00C49F; }
+    body.dark .sync-time { color: #2A4A60; border-top: 1px solid #1E2D3D; }
+    body.dark .header { border-bottom: 1px solid #1E2D3D; background: #0F1923; }
+    body.dark .sync-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #00C49F; }
+    body.dark .kpi-card { background: #111D2B; border: 1px solid #1E2D3D; }
+    body.dark .table-wrap { background: #111D2B; border: 1px solid #1E2D3D; }
+    body.dark th { color: #4A6480; border-bottom: 1px solid #1E2D3D; }
+    body.dark td { border-bottom: 1px solid #131F2B; color: #C8D8E8; }
+    body.dark tr.clickable:hover td { background: #1A2D40; }
+    body.dark .search-bar { background: #0F1923; border: 1px solid #1E2D3D; color: #E8EDF2; }
+    body.dark .search-bar:focus { outline: 1px solid #00C49F; }
+    body.dark .config-box { background: #111D2B; border: 1px solid #1E2D3D; }
+    body.dark input { background: #0F1923; border: 1px solid #1E2D3D; color: #E8EDF2; }
+    body.dark input:focus { outline: 1px solid #00C49F; }
+    body.dark .alert-yellow { background: #F6C90E10; border: 1px solid #F6C90E30; color: #F6C90E; }
+    body.dark .alert-red { background: #FF6B6B10; border: 1px solid #FF6B6B30; color: #FF6B6B; }
+    body.dark .back-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #8AA5BE; }
+    body.dark .perfil-header { background: #111D2B; border: 1px solid #1E2D3D; }
+    body.dark .perfil-info-item { background: #111D2B; border: 1px solid #1E2D3D; }
+    body.dark .mobile-nav { background: #111D2B; border-top: 1px solid #1E2D3D; }
+    body.dark .mobile-nav-item { color: #4A6480; }
+    body.dark .mobile-nav-item.active { color: #00C49F; }
+    body.dark .theme-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #E8EDF2; }
+
+    /* LIGHT MODE */
+    body.light { background: #F4F6F9; color: #1A2740; }
+    body.light .sidebar { background: #FFFFFF; border-right: 1px solid #E0E7EF; }
+    body.light .logo { border-bottom: 1px solid #E0E7EF; }
+    body.light .logo h1 { color: #00916E; }
+    body.light .logo p { color: #8AA5BE; }
+    body.light .nav-item { color: #6B8299; }
+    body.light .nav-item:hover { background: #F0F4F8; color: #1A2740; }
+    body.light .nav-item.active { background: #E6F7F3; color: #00916E; }
+    body.light .sync-time { color: #B0C4D8; border-top: 1px solid #E0E7EF; }
+    body.light .header { border-bottom: 1px solid #E0E7EF; background: #F4F6F9; }
+    body.light .sync-btn { background: #E6F7F3; border: 1px solid #B2E4D8; color: #00916E; }
+    body.light .kpi-card { background: #FFFFFF; border: 1px solid #E0E7EF; }
+    body.light .kpi-label { color: #8AA5BE; }
+    body.light .table-wrap { background: #FFFFFF; border: 1px solid #E0E7EF; }
+    body.light th { color: #8AA5BE; border-bottom: 1px solid #E0E7EF; }
+    body.light td { border-bottom: 1px solid #F0F4F8; color: #2A4A60; }
+    body.light tr.clickable:hover td { background: #F0F4F8; }
+    body.light .search-bar { background: #FFFFFF; border: 1px solid #E0E7EF; color: #1A2740; }
+    body.light .search-bar:focus { outline: 1px solid #00916E; }
+    body.light .config-box { background: #FFFFFF; border: 1px solid #E0E7EF; }
+    body.light input { background: #F4F6F9; border: 1px solid #E0E7EF; color: #1A2740; }
+    body.light input:focus { outline: 1px solid #00916E; }
+    body.light .alert-yellow { background: #FFF8E1; border: 1px solid #F6C90E50; color: #B8860B; }
+    body.light .alert-red { background: #FFF0F0; border: 1px solid #FF6B6B50; color: #C0392B; }
+    body.light .back-btn { background: #F0F4F8; border: 1px solid #E0E7EF; color: #6B8299; }
+    body.light .perfil-header { background: #FFFFFF; border: 1px solid #E0E7EF; }
+    body.light .perfil-info-item { background: #F4F6F9; border: 1px solid #E0E7EF; }
+    body.light .perfil-id { color: #8AA5BE; }
+    body.light .section-title { color: #8AA5BE; }
+    body.light .results-count { color: #8AA5BE; }
+    body.light .click-hint { color: #8AA5BE; }
+    body.light .empty { color: #8AA5BE; }
+    body.light .hint { color: #8AA5BE; }
+    body.light .mobile-nav { background: #FFFFFF; border-top: 1px solid #E0E7EF; }
+    body.light .mobile-nav-item { color: #8AA5BE; }
+    body.light .mobile-nav-item.active { color: #00916E; }
+    body.light .theme-btn { background: #F0F4F8; border: 1px solid #E0E7EF; color: #1A2740; }
+
+    /* LAYOUT */
     .app { display: flex; height: 100vh; overflow: hidden; }
-    .sidebar { width: 220px; background: #111D2B; border-right: 1px solid #1E2D3D; display: flex; flex-direction: column; flex-shrink: 0; }
-    .logo { padding: 24px 20px 16px; border-bottom: 1px solid #1E2D3D; }
-    .logo h1 { font-size: 15px; font-weight: 700; color: #00C49F; letter-spacing: 0.02em; }
-    .logo p { font-size: 11px; color: #4A6480; margin-top: 2px; }
+    .sidebar { width: 220px; display: flex; flex-direction: column; flex-shrink: 0; transition: background 0.2s; }
+    .logo { padding: 24px 20px 16px; }
+    .logo h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+    .logo p { font-size: 11px; margin-top: 2px; }
     .nav { padding: 12px 8px; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; background: transparent; color: #8AA5BE; font-weight: 400; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.15s; }
-    .nav-item:hover { background: #1A2D40; color: #C8D8E8; }
-    .nav-item.active { background: #1A2D40; color: #00C49F; font-weight: 600; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; font-weight: 400; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.15s; background: transparent; }
+    .nav-item.active { font-weight: 600; }
     .nav-icon { font-size: 16px; width: 20px; text-align: center; }
-    .sync-time { padding: 12px 20px; font-size: 10px; color: #2A4A60; border-top: 1px solid #1E2D3D; }
-    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .header { padding: 20px 28px; border-bottom: 1px solid #1E2D3D; display: flex; align-items: center; justify-content: space-between; }
-    .header h2 { font-size: 20px; font-weight: 700; }
-    .sync-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #00C49F; padding: 7px 16px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
-    .content { flex: 1; overflow: auto; padding: 28px; }
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-    .kpi-card { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; padding: 18px 20px; }
-    .kpi-value { font-size: 28px; font-weight: 700; line-height: 1; }
-    .kpi-label { font-size: 11px; color: #4A6480; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .section-title { font-size: 13px; font-weight: 700; color: #4A6480; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; margin-top: 0; }
-    .table-wrap { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; overflow: hidden; margin-bottom: 28px; }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 10px 14px; font-size: 11px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #1E2D3D; font-weight: 600; }
-    td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid #131F2B; color: #C8D8E8; }
+    .sync-time { padding: 12px 20px; font-size: 10px; }
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-shrink: 0; }
+    .header h2 { font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .sync-btn { padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; border: none; white-space: nowrap; }
+    .theme-btn { padding: 7px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; border: none; }
+    .content { flex: 1; overflow: auto; padding: 20px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .kpi-card { border-radius: 12px; padding: 16px; transition: background 0.2s; }
+    .kpi-value { font-size: 26px; font-weight: 700; line-height: 1; }
+    .kpi-label { font-size: 10px; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; margin-top: 0; }
+    .table-wrap { border-radius: 12px; overflow: hidden; margin-bottom: 24px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 400px; }
+    th { text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    td { padding: 11px 14px; font-size: 13px; }
     tr:last-child td { border-bottom: none; }
     tr.clickable { cursor: pointer; transition: background 0.1s; }
-    tr.clickable:hover td { background: #1A2D40; }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-    .badge-green { color: #00C49F; background: #00C49F15; }
-    .badge-yellow { color: #F6C90E; background: #F6C90E15; }
-    .badge-red { color: #FF6B6B; background: #FF6B6B15; }
-    .badge-blue { color: #4A9EFF; background: #4A9EFF15; }
-    .alert { border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; }
-    .alert-yellow { background: #F6C90E10; border: 1px solid #F6C90E30; color: #F6C90E; }
-    .alert-red { background: #FF6B6B10; border: 1px solid #FF6B6B30; color: #FF6B6B; }
+    .badge-green { color: #00C49F; background: #00C49F18; }
+    .badge-yellow { color: #D4A017; background: #F6C90E18; }
+    .badge-red { color: #FF6B6B; background: #FF6B6B18; }
+    .badge-blue { color: #4A9EFF; background: #4A9EFF18; }
+    .alert { border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; }
     .alert a { color: inherit; cursor: pointer; text-decoration: underline; }
-    .empty { text-align: center; padding: 40px; color: #4A6480; font-size: 13px; }
-    .config-box { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; padding: 24px; max-width: 500px; }
-    label { font-size: 12px; color: #4A6480; margin-bottom: 4px; display: block; margin-top: 12px; }
-    input { width: 100%; background: #0F1923; border: 1px solid #1E2D3D; border-radius: 8px; padding: 9px 12px; color: #E8EDF2; font-size: 13px; }
-    input:focus { outline: 1px solid #00C49F; }
+    .empty { text-align: center; padding: 40px; font-size: 13px; }
+    .config-box { border-radius: 12px; padding: 24px; max-width: 500px; }
+    label { font-size: 12px; margin-bottom: 4px; display: block; margin-top: 12px; }
+    input { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 13px; }
     .save-btn { background: #00C49F; border: none; color: #0F1923; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 16px; }
-    .hint { font-size: 11px; color: #4A6480; margin-top: 12px; line-height: 1.6; }
-    .search-bar { width: 100%; background: #0F1923; border: 1px solid #1E2D3D; border-radius: 8px; padding: 10px 14px 10px 36px; color: #E8EDF2; font-size: 13px; margin-bottom: 16px; }
-    .search-bar:focus { outline: 1px solid #00C49F; }
-    .search-wrap { position: relative; }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-60%); color: #4A6480; font-size: 14px; pointer-events: none; }
-    .results-count { font-size: 11px; color: #4A6480; margin-bottom: 10px; }
+    .hint { font-size: 11px; margin-top: 12px; line-height: 1.6; }
+    .search-wrap { position: relative; margin-bottom: 12px; }
+    .search-bar { width: 100%; border-radius: 8px; padding: 10px 14px 10px 36px; font-size: 13px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.5; }
+    .results-count { font-size: 11px; margin-bottom: 8px; }
     .highlight { background: #00C49F30; color: #00C49F; border-radius: 2px; padding: 0 2px; }
-    .click-hint { font-size: 11px; color: #4A6480; margin-bottom: 10px; }
-
-    /* PERFIL INQUILINO */
-    .back-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #8AA5BE; padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; }
-    .back-btn:hover { color: #E8EDF2; }
-    .perfil-header { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; padding: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; }
-    .perfil-avatar { width: 56px; height: 56px; border-radius: 50%; background: #00C49F20; border: 2px solid #00C49F; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-    .perfil-nombre { font-size: 20px; font-weight: 700; color: #E8EDF2; }
-    .perfil-id { font-size: 12px; color: #4A6480; margin-top: 3px; }
-    .perfil-stats { display: flex; gap: 24px; margin-left: auto; }
+    .click-hint { font-size: 11px; margin-bottom: 10px; }
+    .back-btn { border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; }
+    .perfil-header { border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .perfil-avatar { width: 52px; height: 52px; border-radius: 50%; background: #00C49F20; border: 2px solid #00C49F; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .perfil-nombre { font-size: 18px; font-weight: 700; }
+    .perfil-id { font-size: 12px; margin-top: 3px; }
+    .perfil-stats { display: flex; gap: 20px; margin-left: auto; }
     .perfil-stat { text-align: center; }
-    .perfil-stat-value { font-size: 22px; font-weight: 700; }
-    .perfil-stat-label { font-size: 10px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; }
-    .perfil-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .perfil-info-item { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 8px; padding: 12px 16px; }
-    .perfil-info-label { font-size: 10px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .perfil-info-value { font-size: 13px; color: #C8D8E8; }
+    .perfil-stat-value { font-size: 20px; font-weight: 700; }
+    .perfil-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6; }
+    .perfil-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .perfil-info-item { border-radius: 8px; padding: 10px 14px; }
+    .perfil-info-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.5; margin-bottom: 4px; }
+    .perfil-info-value { font-size: 13px; }
+
+    /* MOBILE NAV */
+    .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; padding: 8px 0 12px; }
+    .mobile-nav-inner { display: flex; justify-content: space-around; }
+    .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 8px; font-size: 10px; transition: all 0.15s; }
+    .mobile-nav-item .mn-icon { font-size: 20px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 680px) {
+      .sidebar { display: none; }
+      .mobile-nav { display: block; }
+      .content { padding: 16px 12px 80px; }
+      .header { padding: 12px 16px; }
+      .header h2 { font-size: 16px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .kpi-value { font-size: 22px; }
+      .perfil-header { flex-direction: column; align-items: flex-start; }
+      .perfil-stats { margin-left: 0; }
+    }
   </style>
 </head>
-<body>
+<body class="dark">
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
@@ -100,19 +185,14 @@ const Badge = ({ estado }) => {
     'VENCIDO': 'red', 'Vencido': 'red', 'Urgente': 'red',
     'En procesos': 'blue', 'En proceso': 'blue',
   };
-  const cls = map[estado] || 'blue';
-  return <span className={`badge badge-${cls}`}>{estado || '—'}</span>;
+  return <span className={`badge badge-${map[estado]||'blue'}`}>{estado||'—'}</span>;
 };
 
 const Highlight = ({ text, search }) => {
   if (!search || !text) return <>{text||'—'}</>;
   const idx = text.toLowerCase().indexOf(search.toLowerCase());
   if (idx === -1) return <>{text}</>;
-  return <>
-    {text.slice(0, idx)}
-    <span className="highlight">{text.slice(idx, idx + search.length)}</span>
-    {text.slice(idx + search.length)}
-  </>;
+  return <>{text.slice(0,idx)}<span className="highlight">{text.slice(idx,idx+search.length)}</span>{text.slice(idx+search.length)}</>;
 };
 
 const NAV = [
@@ -121,66 +201,48 @@ const NAV = [
   { id: 'propiedades', label: 'Propiedades', icon: '🏠' },
   { id: 'pagos', label: 'Pagos', icon: '💰' },
   { id: 'reclamos', label: 'Reclamos', icon: '🔧' },
-  { id: 'config', label: 'Configuración', icon: '⚙️' },
+  { id: 'config', label: 'Config', icon: '⚙️' },
 ];
 
 function Dashboard({ data }) {
-  const pagosAlert = (data.pagos||[]).filter(p => p.ESTADO==='VENCIDO'||p.ESTADO==='PENDIENTE'||p.ESTADO==='Vencido'||p.ESTADO==='Pendiente').length;
-  const reclamosActivos = (data.reclamos||[]).filter(r => r.ESTADO==='Abierto'||r.ESTADO==='Urgente'||r.ESTADO==='En procesos'||r.ESTADO==='En proceso').length;
-  const urgentes = (data.reclamos||[]).filter(r => r.ESTADO==='Urgente').length;
-
+  const pagosAlert = (data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
+  const reclamosActivos = (data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
+  const urgentes = (data.reclamos||[]).filter(r=>r.ESTADO==='Urgente').length;
   const kpis = [
-    { label: 'Inquilinos activos', value: (data.inquilinos||[]).length, color: '#4A9EFF' },
+    { label: 'Inquilinos', value: (data.inquilinos||[]).length, color: '#4A9EFF' },
     { label: 'Propiedades', value: (data.propiedades||[]).length, color: '#00C49F' },
-    { label: 'Pagos pendientes/vencidos', value: pagosAlert, color: pagosAlert > 0 ? '#FF6B6B' : '#00C49F' },
-    { label: 'Reclamos activos', value: reclamosActivos, color: reclamosActivos > 0 ? '#F6C90E' : '#00C49F' },
+    { label: 'Pagos pendientes', value: pagosAlert, color: pagosAlert>0?'#FF6B6B':'#00C49F' },
+    { label: 'Reclamos activos', value: reclamosActivos, color: reclamosActivos>0?'#F6C90E':'#00C49F' },
   ];
-  if (urgentes > 0) kpis.push({ label: '🚨 Reclamos urgentes', value: urgentes, color: '#FF6B6B' });
-
+  if (urgentes>0) kpis.push({ label: '🚨 Urgentes', value: urgentes, color: '#FF6B6B' });
   return <>
     <div className="kpi-grid">
-      {kpis.map((k,i) => (
-        <div key={i} className="kpi-card" style={{ borderTop: `3px solid ${k.color}` }}>
-          <div className="kpi-value" style={{ color: k.color }}>{k.value}</div>
+      {kpis.map((k,i)=>(
+        <div key={i} className="kpi-card" style={{borderTop:`3px solid ${k.color}`}}>
+          <div className="kpi-value" style={{color:k.color}}>{k.value}</div>
           <div className="kpi-label">{k.label}</div>
         </div>
       ))}
     </div>
-
     <p className="section-title">Últimos reclamos</p>
     <div className="table-wrap">
-      <table>
-        <thead><tr>{['ID Propiedad','ID Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+      <table><thead><tr>{['ID Propiedad','ID Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
         <tbody>
           {(data.reclamos||[]).filter(r=>r.DESCRIPCION).slice(0,5).map((r,i)=>(
-            <tr key={i}>
-              <td>{r['ID PROPIEDAD']||'—'}</td>
-              <td>{r['ID INQUILINO']||'—'}</td>
-              <td>{r.DESCRIPCION||'—'}</td>
-              <td><Badge estado={r.ESTADO}/></td>
-              <td>{r.FECHA||'—'}</td>
-            </tr>
+            <tr key={i}><td>{r['ID PROPIEDAD']||'—'}</td><td>{r['ID INQUILINO']||'—'}</td><td>{r.DESCRIPCION||'—'}</td><td><Badge estado={r.ESTADO}/></td><td>{r.FECHA||'—'}</td></tr>
           ))}
-          {!(data.reclamos||[]).filter(r=>r.DESCRIPCION).length && <tr><td colSpan="5" className="empty">Sin reclamos registrados</td></tr>}
+          {!(data.reclamos||[]).filter(r=>r.DESCRIPCION).length&&<tr><td colSpan="5" className="empty">Sin reclamos</td></tr>}
         </tbody>
       </table>
     </div>
-
     <p className="section-title">Últimos pagos</p>
     <div className="table-wrap">
-      <table>
-        <thead><tr>{['Nombre Inquilino','ID Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+      <table><thead><tr>{['Inquilino','ID Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
         <tbody>
           {(data.pagos||[]).filter(p=>p.MONTO).slice(0,5).map((p,i)=>(
-            <tr key={i}>
-              <td>{p['nombre inquilino']||p['NOMBRE INQUILINO']||p['ID INQUILINO']||'—'}</td>
-              <td>{p['ID PROPIEDAD']||'—'}</td>
-              <td>{p.MONTO||'—'}</td>
-              <td>{p['MES CORRESPONDIENTE']||'—'}</td>
-              <td><Badge estado={p.ESTADO}/></td>
-            </tr>
+            <tr key={i}><td>{p['nombre inquilino']||p['NOMBRE INQUILINO']||p['ID INQUILINO']||'—'}</td><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td><Badge estado={p.ESTADO}/></td></tr>
           ))}
-          {!(data.pagos||[]).filter(p=>p.MONTO).length && <tr><td colSpan="5" className="empty">Sin pagos registrados</td></tr>}
+          {!(data.pagos||[]).filter(p=>p.MONTO).length&&<tr><td colSpan="5" className="empty">Sin pagos</td></tr>}
         </tbody>
       </table>
     </div>
@@ -188,180 +250,80 @@ function Dashboard({ data }) {
 }
 
 function PerfilInquilino({ inquilino, data, onBack }) {
-  const id = inquilino['ID INQUILINO'] || inquilino['ID'] || '';
-  const nombre = inquilino['NOMBRE'] || inquilino['nombre inquilino'] || inquilino['NOMBRE INQUILINO'] || id;
-
-  const pagos = (data.pagos||[]).filter(p => p['ID INQUILINO'] === id);
-  const reclamos = (data.reclamos||[]).filter(r => r['ID INQUILINO'] === id);
-  const pagosPendientes = pagos.filter(p => p.ESTADO==='PENDIENTE'||p.ESTADO==='Pendiente'||p.ESTADO==='VENCIDO'||p.ESTADO==='Vencido').length;
-
-  const infoKeys = Object.keys(inquilino).filter(k => k !== 'ID INQUILINO' && k !== 'ID');
-
+  const id = inquilino['ID INQUILINO']||inquilino['ID']||'';
+  const nombre = inquilino['NOMBRE']||inquilino['nombre inquilino']||inquilino['NOMBRE INQUILINO']||id;
+  const pagos = (data.pagos||[]).filter(p=>p['ID INQUILINO']===id);
+  const reclamos = (data.reclamos||[]).filter(r=>r['ID INQUILINO']===id);
+  const pagosPendientes = pagos.filter(p=>['PENDIENTE','Pendiente','VENCIDO','Vencido'].includes(p.ESTADO)).length;
+  const infoKeys = Object.keys(inquilino).filter(k=>k!=='ID INQUILINO'&&k!=='ID');
   return <>
-    <button className="back-btn" onClick={onBack}>← Volver a Inquilinos</button>
-
+    <button className="back-btn" onClick={onBack}>← Volver</button>
     <div className="perfil-header">
       <div className="perfil-avatar">👤</div>
-      <div>
-        <div className="perfil-nombre">{nombre}</div>
-        <div className="perfil-id">{id}</div>
-      </div>
+      <div><div className="perfil-nombre">{nombre}</div><div className="perfil-id">{id}</div></div>
       <div className="perfil-stats">
-        <div className="perfil-stat">
-          <div className="perfil-stat-value" style={{color:'#4A9EFF'}}>{pagos.length}</div>
-          <div className="perfil-stat-label">Pagos</div>
-        </div>
-        <div className="perfil-stat">
-          <div className="perfil-stat-value" style={{color: pagosPendientes > 0 ? '#FF6B6B' : '#00C49F'}}>{pagosPendientes}</div>
-          <div className="perfil-stat-label">Pendientes</div>
-        </div>
-        <div className="perfil-stat">
-          <div className="perfil-stat-value" style={{color: reclamos.length > 0 ? '#F6C90E' : '#00C49F'}}>{reclamos.length}</div>
-          <div className="perfil-stat-label">Reclamos</div>
-        </div>
+        <div className="perfil-stat"><div className="perfil-stat-value" style={{color:'#4A9EFF'}}>{pagos.length}</div><div className="perfil-stat-label">Pagos</div></div>
+        <div className="perfil-stat"><div className="perfil-stat-value" style={{color:pagosPendientes>0?'#FF6B6B':'#00C49F'}}>{pagosPendientes}</div><div className="perfil-stat-label">Pendientes</div></div>
+        <div className="perfil-stat"><div className="perfil-stat-value" style={{color:reclamos.length>0?'#F6C90E':'#00C49F'}}>{reclamos.length}</div><div className="perfil-stat-label">Reclamos</div></div>
       </div>
     </div>
-
-    {infoKeys.length > 0 && <>
-      <p className="section-title">Datos del inquilino</p>
-      <div className="perfil-info-grid" style={{marginBottom: 24}}>
-        {infoKeys.map(k => (
-          <div key={k} className="perfil-info-item">
-            <div className="perfil-info-label">{k}</div>
-            <div className="perfil-info-value">{inquilino[k]||'—'}</div>
-          </div>
-        ))}
-      </div>
-    </>}
-
-    <p className="section-title">Historial de pagos</p>
-    <div className="table-wrap">
-      <table>
-        <thead><tr>{['ID Propiedad','Monto','Período','Vencimiento','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
-        <tbody>
-          {pagos.map((p,i)=>(
-            <tr key={i}>
-              <td>{p['ID PROPIEDAD']||'—'}</td>
-              <td>{p.MONTO||'—'}</td>
-              <td>{p['MES CORRESPONDIENTE']||'—'}</td>
-              <td>{p['Fecha vencimiento']||'—'}</td>
-              <td><Badge estado={p.ESTADO}/></td>
-            </tr>
-          ))}
-          {!pagos.length && <tr><td colSpan="5" className="empty">Sin pagos registrados</td></tr>}
-        </tbody>
-      </table>
-    </div>
-
-    <p className="section-title">Historial de reclamos</p>
-    <div className="table-wrap">
-      <table>
-        <thead><tr>{['ID Propiedad','Tipo','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
-        <tbody>
-          {reclamos.map((r,i)=>(
-            <tr key={i}>
-              <td>{r['ID PROPIEDAD']||'—'}</td>
-              <td>{r.TIPO||'—'}</td>
-              <td>{r.DESCRIPCION||'—'}</td>
-              <td><Badge estado={r.ESTADO}/></td>
-              <td>{r.FECHA||'—'}</td>
-            </tr>
-          ))}
-          {!reclamos.length && <tr><td colSpan="5" className="empty">Sin reclamos registrados</td></tr>}
-        </tbody>
-      </table>
-    </div>
+    {infoKeys.length>0&&<><p className="section-title">Datos</p><div className="perfil-info-grid" style={{marginBottom:20}}>{infoKeys.map(k=><div key={k} className="perfil-info-item"><div className="perfil-info-label">{k}</div><div className="perfil-info-value">{inquilino[k]||'—'}</div></div>)}</div></>}
+    <p className="section-title">Pagos</p>
+    <div className="table-wrap"><table><thead><tr>{['ID Propiedad','Monto','Período','Vencimiento','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+      <tbody>{pagos.map((p,i)=><tr key={i}><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td>{p['Fecha vencimiento']||'—'}</td><td><Badge estado={p.ESTADO}/></td></tr>)}
+      {!pagos.length&&<tr><td colSpan="5" className="empty">Sin pagos</td></tr>}</tbody></table></div>
+    <p className="section-title">Reclamos</p>
+    <div className="table-wrap"><table><thead><tr>{['ID Propiedad','Tipo','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+      <tbody>{reclamos.map((r,i)=><tr key={i}><td>{r['ID PROPIEDAD']||'—'}</td><td>{r.TIPO||'—'}</td><td>{r.DESCRIPCION||'—'}</td><td><Badge estado={r.ESTADO}/></td><td>{r.FECHA||'—'}</td></tr>)}
+      {!reclamos.length&&<tr><td colSpan="5" className="empty">Sin reclamos</td></tr>}</tbody></table></div>
   </>;
 }
 
 function InquilinosView({ rows, data }) {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
-
   if (selected) return <PerfilInquilino inquilino={selected} data={data} onBack={()=>setSelected(null)}/>;
-
-  const filtered = (rows||[]).filter(row =>
-    Object.values(row).some(val =>
-      String(val).toLowerCase().includes(search.toLowerCase())
-    )
-  );
-
-  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos para mostrar</div></div>;
+  const filtered = (rows||[]).filter(row=>Object.values(row).some(v=>String(v).toLowerCase().includes(search.toLowerCase())));
+  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos</div></div>;
   const headers = Object.keys(rows[0]);
-
   return <>
-    <div className="search-wrap">
-      <span className="search-icon">🔍</span>
-      <input className="search-bar" placeholder="Buscar por nombre, ID..." value={search} onChange={e=>setSearch(e.target.value)}/>
-    </div>
-    {search && <div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''} encontrado{filtered.length!==1?'s':''}</div>}
-    <div className="click-hint">👆 Clickeá en un inquilino para ver su resumen completo</div>
-    <div className="table-wrap">
-      <table>
-        <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
-        <tbody>
-          {filtered.map((row,i)=>(
-            <tr key={i} className="clickable" onClick={()=>setSelected(row)}>
-              {headers.map(h=>(
-                <td key={h}>
-                  {h==='ESTADO' ? <Badge estado={row[h]}/> : <Highlight text={row[h]} search={search}/>}
-                </td>
-              ))}
-            </tr>
-          ))}
-          {!filtered.length && <tr><td colSpan={headers.length} className="empty">Sin resultados para "{search}"</td></tr>}
-        </tbody>
-      </table>
-    </div>
+    <div className="search-wrap"><span className="search-icon">🔍</span><input className="search-bar" placeholder="Buscar por nombre, ID..." value={search} onChange={e=>setSearch(e.target.value)}/></div>
+    {search&&<div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''}</div>}
+    <div className="click-hint">👆 Clickeá en un inquilino para ver su resumen</div>
+    <div className="table-wrap"><table>
+      <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
+      <tbody>{filtered.map((row,i)=><tr key={i} className="clickable" onClick={()=>setSelected(row)}>{headers.map(h=><td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>)}</tr>)}
+      {!filtered.length&&<tr><td colSpan={headers.length} className="empty">Sin resultados para "{search}"</td></tr>}</tbody>
+    </table></div>
   </>;
 }
 
 function TableView({ rows }) {
   const [search, setSearch] = useState('');
-  const filtered = (rows||[]).filter(row =>
-    Object.values(row).some(val => String(val).toLowerCase().includes(search.toLowerCase()))
-  );
-  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos para mostrar</div></div>;
+  const filtered = (rows||[]).filter(row=>Object.values(row).some(v=>String(v).toLowerCase().includes(search.toLowerCase())));
+  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos</div></div>;
   const headers = Object.keys(rows[0]);
   return <>
-    <div className="search-wrap">
-      <span className="search-icon">🔍</span>
-      <input className="search-bar" placeholder="Buscar..." value={search} onChange={e=>setSearch(e.target.value)}/>
-    </div>
-    {search && <div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''} encontrado{filtered.length!==1?'s':''}</div>}
-    <div className="table-wrap">
-      <table>
-        <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
-        <tbody>
-          {filtered.map((row,i)=>(
-            <tr key={i}>
-              {headers.map(h=>(
-                <td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>
-              ))}
-            </tr>
-          ))}
-          {!filtered.length && <tr><td colSpan={headers.length} className="empty">Sin resultados para "{search}"</td></tr>}
-        </tbody>
-      </table>
-    </div>
+    <div className="search-wrap"><span className="search-icon">🔍</span><input className="search-bar" placeholder="Buscar..." value={search} onChange={e=>setSearch(e.target.value)}/></div>
+    {search&&<div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''}</div>}
+    <div className="table-wrap"><table>
+      <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
+      <tbody>{filtered.map((row,i)=><tr key={i}>{headers.map(h=><td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>)}</tr>)}
+      {!filtered.length&&<tr><td colSpan={headers.length} className="empty">Sin resultados</td></tr>}</tbody>
+    </table></div>
   </>;
 }
 
 function Config({ creds, onSave }) {
   const [sheetId, setSheetId] = useState(creds.sheetId||'');
   const [apiKey, setApiKey] = useState(creds.apiKey||'');
-  return (
-    <div className="config-box">
-      <p className="section-title" style={{marginTop:0}}>Conexión con Google Sheets</p>
-      <label>Sheet ID</label>
-      <input value={sheetId} onChange={e=>setSheetId(e.target.value)} placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"/>
-      <label>API Key</label>
-      <input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIzaSy..."/>
-      <br/>
-      <button className="save-btn" onClick={()=>onSave({sheetId,apiKey})}>Guardar y conectar</button>
-      <p className="hint">El Sheet ID está en la URL de tu Google Sheet.<br/>Las hojas deben llamarse: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.</p>
-    </div>
-  );
+  return <div className="config-box">
+    <p className="section-title" style={{marginTop:0}}>Conexión con Google Sheets</p>
+    <label>Sheet ID</label><input value={sheetId} onChange={e=>setSheetId(e.target.value)} placeholder="1BxiMVs0..."/>
+    <label>API Key</label><input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIzaSy..."/>
+    <br/><button className="save-btn" onClick={()=>onSave({sheetId,apiKey})}>Guardar y conectar</button>
+    <p className="hint">El Sheet ID está en la URL de tu Google Sheet.<br/>Las hojas deben llamarse: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.</p>
+  </div>;
 }
 
 function App() {
@@ -370,19 +332,24 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [lastSync, setLastSync] = useState(null);
+  const [dark, setDark] = useState(true);
   const [creds, setCreds] = useState(() => {
     try { return JSON.parse(localStorage.getItem('crm_creds')||'{}'); } catch { return {}; }
   });
 
+  useEffect(() => {
+    document.body.className = dark ? 'dark' : 'light';
+  }, [dark]);
+
   const sync = useCallback(async () => {
-    if (!creds.sheetId || !creds.apiKey) return;
+    if (!creds.sheetId||!creds.apiKey) return;
     setLoading(true); setError(null);
     try {
-      const [inquilinos, propiedades, pagos, reclamos] = await Promise.all([
-        fetchSheet('INQUILINOS', creds.sheetId, creds.apiKey),
-        fetchSheet('PROPIEDADES', creds.sheetId, creds.apiKey),
-        fetchSheet('PAGOS', creds.sheetId, creds.apiKey),
-        fetchSheet('RECLAMOS', creds.sheetId, creds.apiKey),
+      const [inquilinos,propiedades,pagos,reclamos] = await Promise.all([
+        fetchSheet('INQUILINOS',creds.sheetId,creds.apiKey),
+        fetchSheet('PROPIEDADES',creds.sheetId,creds.apiKey),
+        fetchSheet('PAGOS',creds.sheetId,creds.apiKey),
+        fetchSheet('RECLAMOS',creds.sheetId,creds.apiKey),
       ]);
       setData({inquilinos,propiedades,pagos,reclamos});
       setLastSync(new Date().toLocaleTimeString('es-AR'));
@@ -392,57 +359,54 @@ function App() {
 
   useEffect(() => { sync(); }, [sync]);
 
-  const saveCreds = (c) => {
-    setCreds(c);
-    localStorage.setItem('crm_creds', JSON.stringify(c));
-    setView('dashboard');
-  };
+  const saveCreds = (c) => { setCreds(c); localStorage.setItem('crm_creds',JSON.stringify(c)); setView('dashboard'); };
+  const titles = { dashboard:'Resumen', inquilinos:'Inquilinos', propiedades:'Propiedades', pagos:'Pagos', reclamos:'Reclamos', config:'Configuración' };
 
-  const titles = { dashboard:'Resumen general', inquilinos:'Inquilinos', propiedades:'Propiedades', pagos:'Pagos', reclamos:'Reclamos', config:'Configuración' };
-
-  return (
-    <div className="app">
-      <aside className="sidebar">
-        <div className="logo">
-          <h1>CRM Inquilino</h1>
-          <p>Gestión de alquileres</p>
-        </div>
-        <nav className="nav">
-          {NAV.map(item => (
-            <button key={item.id} className={`nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
-              <span className="nav-icon">{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-        </nav>
-        {lastSync && <div className="sync-time">Última sync: {lastSync}</div>}
-      </aside>
-
-      <main className="main">
-        <div className="header">
-          <h2>{titles[view]}</h2>
-          <button className="sync-btn" onClick={sync} disabled={loading}>
-            {loading ? '⏳ Sincronizando...' : '🔄 Sincronizar'}
+  return <div className="app">
+    <aside className="sidebar">
+      <div className="logo"><h1>CRM Inquilino</h1><p>Gestión de alquileres</p></div>
+      <nav className="nav">
+        {NAV.map(item=>(
+          <button key={item.id} className={`nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
+            <span className="nav-icon">{item.icon}</span>{item.label}
           </button>
-        </div>
+        ))}
+      </nav>
+      {lastSync&&<div className="sync-time">Última sync: {lastSync}</div>}
+    </aside>
 
-        <div className="content">
-          {error && <div className="alert alert-red">⚠️ {error} — Verificá las credenciales en Configuración.</div>}
-          {!creds.sheetId && view!=='config' && (
-            <div className="alert alert-yellow">
-              ⚙️ Configurá tu Google Sheet antes de continuar. <a onClick={()=>setView('config')}>Ir a Configuración</a>
-            </div>
-          )}
-          {view==='dashboard' && <Dashboard data={data}/>}
-          {view==='inquilinos' && <InquilinosView rows={data.inquilinos} data={data}/>}
-          {view==='propiedades' && <TableView rows={data.propiedades}/>}
-          {view==='pagos' && <TableView rows={data.pagos}/>}
-          {view==='reclamos' && <TableView rows={data.reclamos}/>}
-          {view==='config' && <Config creds={creds} onSave={saveCreds}/>}
+    <main className="main">
+      <div className="header">
+        <h2>{titles[view]}</h2>
+        <div className="header-actions">
+          <button className="theme-btn" onClick={()=>setDark(d=>!d)} title="Cambiar tema">{dark?'☀️':'🌙'}</button>
+          <button className="sync-btn" onClick={sync} disabled={loading}>{loading?'⏳':'🔄'} {loading?'Sync...':'Sincronizar'}</button>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+
+      <div className="content">
+        {error&&<div className="alert alert-red">⚠️ {error}</div>}
+        {!creds.sheetId&&view!=='config'&&<div className="alert alert-yellow">⚙️ Configurá tu Google Sheet. <a onClick={()=>setView('config')}>Ir a Configuración</a></div>}
+        {view==='dashboard'&&<Dashboard data={data}/>}
+        {view==='inquilinos'&&<InquilinosView rows={data.inquilinos} data={data}/>}
+        {view==='propiedades'&&<TableView rows={data.propiedades}/>}
+        {view==='pagos'&&<TableView rows={data.pagos}/>}
+        {view==='reclamos'&&<TableView rows={data.reclamos}/>}
+        {view==='config'&&<Config creds={creds} onSave={saveCreds}/>}
+      </div>
+    </main>
+
+    {/* MOBILE NAV */}
+    <nav className="mobile-nav">
+      <div className="mobile-nav-inner">
+        {NAV.map(item=>(
+          <button key={item.id} className={`mobile-nav-item${view===item.id?' active':''}`} onClick={()=>setView(item.id)}>
+            <span className="mn-icon">{item.icon}</span>{item.label}
+          </button>
+        ))}
+      </div>
+    </nav>
+  </div>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
