@@ -36,6 +36,8 @@
     th { text-align: left; padding: 10px 14px; font-size: 11px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #1E2D3D; font-weight: 600; }
     td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid #131F2B; color: #C8D8E8; }
     tr:last-child td { border-bottom: none; }
+    tr.clickable { cursor: pointer; transition: background 0.1s; }
+    tr.clickable:hover td { background: #1A2D40; }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .badge-green { color: #00C49F; background: #00C49F15; }
     .badge-yellow { color: #F6C90E; background: #F6C90E15; }
@@ -58,6 +60,23 @@
     .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-60%); color: #4A6480; font-size: 14px; pointer-events: none; }
     .results-count { font-size: 11px; color: #4A6480; margin-bottom: 10px; }
     .highlight { background: #00C49F30; color: #00C49F; border-radius: 2px; padding: 0 2px; }
+    .click-hint { font-size: 11px; color: #4A6480; margin-bottom: 10px; }
+
+    /* PERFIL INQUILINO */
+    .back-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #8AA5BE; padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; }
+    .back-btn:hover { color: #E8EDF2; }
+    .perfil-header { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 12px; padding: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; }
+    .perfil-avatar { width: 56px; height: 56px; border-radius: 50%; background: #00C49F20; border: 2px solid #00C49F; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .perfil-nombre { font-size: 20px; font-weight: 700; color: #E8EDF2; }
+    .perfil-id { font-size: 12px; color: #4A6480; margin-top: 3px; }
+    .perfil-stats { display: flex; gap: 24px; margin-left: auto; }
+    .perfil-stat { text-align: center; }
+    .perfil-stat-value { font-size: 22px; font-weight: 700; }
+    .perfil-stat-label { font-size: 10px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; }
+    .perfil-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .perfil-info-item { background: #111D2B; border: 1px solid #1E2D3D; border-radius: 8px; padding: 12px 16px; }
+    .perfil-info-label { font-size: 10px; color: #4A6480; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .perfil-info-value { font-size: 13px; color: #C8D8E8; }
   </style>
 </head>
 <body>
@@ -168,8 +187,98 @@ function Dashboard({ data }) {
   </>;
 }
 
-function TableView({ rows }) {
+function PerfilInquilino({ inquilino, data, onBack }) {
+  const id = inquilino['ID INQUILINO'] || inquilino['ID'] || '';
+  const nombre = inquilino['NOMBRE'] || inquilino['nombre inquilino'] || inquilino['NOMBRE INQUILINO'] || id;
+
+  const pagos = (data.pagos||[]).filter(p => p['ID INQUILINO'] === id);
+  const reclamos = (data.reclamos||[]).filter(r => r['ID INQUILINO'] === id);
+  const pagosPendientes = pagos.filter(p => p.ESTADO==='PENDIENTE'||p.ESTADO==='Pendiente'||p.ESTADO==='VENCIDO'||p.ESTADO==='Vencido').length;
+
+  const infoKeys = Object.keys(inquilino).filter(k => k !== 'ID INQUILINO' && k !== 'ID');
+
+  return <>
+    <button className="back-btn" onClick={onBack}>← Volver a Inquilinos</button>
+
+    <div className="perfil-header">
+      <div className="perfil-avatar">👤</div>
+      <div>
+        <div className="perfil-nombre">{nombre}</div>
+        <div className="perfil-id">{id}</div>
+      </div>
+      <div className="perfil-stats">
+        <div className="perfil-stat">
+          <div className="perfil-stat-value" style={{color:'#4A9EFF'}}>{pagos.length}</div>
+          <div className="perfil-stat-label">Pagos</div>
+        </div>
+        <div className="perfil-stat">
+          <div className="perfil-stat-value" style={{color: pagosPendientes > 0 ? '#FF6B6B' : '#00C49F'}}>{pagosPendientes}</div>
+          <div className="perfil-stat-label">Pendientes</div>
+        </div>
+        <div className="perfil-stat">
+          <div className="perfil-stat-value" style={{color: reclamos.length > 0 ? '#F6C90E' : '#00C49F'}}>{reclamos.length}</div>
+          <div className="perfil-stat-label">Reclamos</div>
+        </div>
+      </div>
+    </div>
+
+    {infoKeys.length > 0 && <>
+      <p className="section-title">Datos del inquilino</p>
+      <div className="perfil-info-grid" style={{marginBottom: 24}}>
+        {infoKeys.map(k => (
+          <div key={k} className="perfil-info-item">
+            <div className="perfil-info-label">{k}</div>
+            <div className="perfil-info-value">{inquilino[k]||'—'}</div>
+          </div>
+        ))}
+      </div>
+    </>}
+
+    <p className="section-title">Historial de pagos</p>
+    <div className="table-wrap">
+      <table>
+        <thead><tr>{['ID Propiedad','Monto','Período','Vencimiento','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <tbody>
+          {pagos.map((p,i)=>(
+            <tr key={i}>
+              <td>{p['ID PROPIEDAD']||'—'}</td>
+              <td>{p.MONTO||'—'}</td>
+              <td>{p['MES CORRESPONDIENTE']||'—'}</td>
+              <td>{p['Fecha vencimiento']||'—'}</td>
+              <td><Badge estado={p.ESTADO}/></td>
+            </tr>
+          ))}
+          {!pagos.length && <tr><td colSpan="5" className="empty">Sin pagos registrados</td></tr>}
+        </tbody>
+      </table>
+    </div>
+
+    <p className="section-title">Historial de reclamos</p>
+    <div className="table-wrap">
+      <table>
+        <thead><tr>{['ID Propiedad','Tipo','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <tbody>
+          {reclamos.map((r,i)=>(
+            <tr key={i}>
+              <td>{r['ID PROPIEDAD']||'—'}</td>
+              <td>{r.TIPO||'—'}</td>
+              <td>{r.DESCRIPCION||'—'}</td>
+              <td><Badge estado={r.ESTADO}/></td>
+              <td>{r.FECHA||'—'}</td>
+            </tr>
+          ))}
+          {!reclamos.length && <tr><td colSpan="5" className="empty">Sin reclamos registrados</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </>;
+}
+
+function InquilinosView({ rows, data }) {
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState(null);
+
+  if (selected) return <PerfilInquilino inquilino={selected} data={data} onBack={()=>setSelected(null)}/>;
 
   const filtered = (rows||[]).filter(row =>
     Object.values(row).some(val =>
@@ -183,14 +292,43 @@ function TableView({ rows }) {
   return <>
     <div className="search-wrap">
       <span className="search-icon">🔍</span>
-      <input
-        className="search-bar"
-        placeholder="Buscar por nombre, ID, estado..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
+      <input className="search-bar" placeholder="Buscar por nombre, ID..." value={search} onChange={e=>setSearch(e.target.value)}/>
     </div>
-    {search && <div className="results-count">{filtered.length} resultado{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}</div>}
+    {search && <div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''} encontrado{filtered.length!==1?'s':''}</div>}
+    <div className="click-hint">👆 Clickeá en un inquilino para ver su resumen completo</div>
+    <div className="table-wrap">
+      <table>
+        <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
+        <tbody>
+          {filtered.map((row,i)=>(
+            <tr key={i} className="clickable" onClick={()=>setSelected(row)}>
+              {headers.map(h=>(
+                <td key={h}>
+                  {h==='ESTADO' ? <Badge estado={row[h]}/> : <Highlight text={row[h]} search={search}/>}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {!filtered.length && <tr><td colSpan={headers.length} className="empty">Sin resultados para "{search}"</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  </>;
+}
+
+function TableView({ rows }) {
+  const [search, setSearch] = useState('');
+  const filtered = (rows||[]).filter(row =>
+    Object.values(row).some(val => String(val).toLowerCase().includes(search.toLowerCase()))
+  );
+  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos para mostrar</div></div>;
+  const headers = Object.keys(rows[0]);
+  return <>
+    <div className="search-wrap">
+      <span className="search-icon">🔍</span>
+      <input className="search-bar" placeholder="Buscar..." value={search} onChange={e=>setSearch(e.target.value)}/>
+    </div>
+    {search && <div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''} encontrado{filtered.length!==1?'s':''}</div>}
     <div className="table-wrap">
       <table>
         <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
@@ -198,12 +336,7 @@ function TableView({ rows }) {
           {filtered.map((row,i)=>(
             <tr key={i}>
               {headers.map(h=>(
-                <td key={h}>
-                  {h==='ESTADO'
-                    ? <Badge estado={row[h]}/>
-                    : <Highlight text={row[h]} search={search}/>
-                  }
-                </td>
+                <td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>
               ))}
             </tr>
           ))}
@@ -226,10 +359,7 @@ function Config({ creds, onSave }) {
       <input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIzaSy..."/>
       <br/>
       <button className="save-btn" onClick={()=>onSave({sheetId,apiKey})}>Guardar y conectar</button>
-      <p className="hint">
-        El Sheet ID está en la URL de tu Google Sheet.<br/>
-        Las hojas deben llamarse: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.
-      </p>
+      <p className="hint">El Sheet ID está en la URL de tu Google Sheet.<br/>Las hojas deben llamarse: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.</p>
     </div>
   );
 }
@@ -304,7 +434,7 @@ function App() {
             </div>
           )}
           {view==='dashboard' && <Dashboard data={data}/>}
-          {view==='inquilinos' && <TableView rows={data.inquilinos}/>}
+          {view==='inquilinos' && <InquilinosView rows={data.inquilinos} data={data}/>}
           {view==='propiedades' && <TableView rows={data.propiedades}/>}
           {view==='pagos' && <TableView rows={data.pagos}/>}
           {view==='reclamos' && <TableView rows={data.reclamos}/>}
