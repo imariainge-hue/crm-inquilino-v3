@@ -52,6 +52,12 @@
     input:focus { outline: 1px solid #00C49F; }
     .save-btn { background: #00C49F; border: none; color: #0F1923; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 16px; }
     .hint { font-size: 11px; color: #4A6480; margin-top: 12px; line-height: 1.6; }
+    .search-bar { width: 100%; background: #0F1923; border: 1px solid #1E2D3D; border-radius: 8px; padding: 10px 14px 10px 36px; color: #E8EDF2; font-size: 13px; margin-bottom: 16px; }
+    .search-bar:focus { outline: 1px solid #00C49F; }
+    .search-wrap { position: relative; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-60%); color: #4A6480; font-size: 14px; pointer-events: none; }
+    .results-count { font-size: 11px; color: #4A6480; margin-bottom: 10px; }
+    .highlight { background: #00C49F30; color: #00C49F; border-radius: 2px; padding: 0 2px; }
   </style>
 </head>
 <body>
@@ -77,6 +83,17 @@ const Badge = ({ estado }) => {
   };
   const cls = map[estado] || 'blue';
   return <span className={`badge badge-${cls}`}>{estado || '—'}</span>;
+};
+
+const Highlight = ({ text, search }) => {
+  if (!search || !text) return <>{text||'—'}</>;
+  const idx = text.toLowerCase().indexOf(search.toLowerCase());
+  if (idx === -1) return <>{text}</>;
+  return <>
+    {text.slice(0, idx)}
+    <span className="highlight">{text.slice(idx, idx + search.length)}</span>
+    {text.slice(idx + search.length)}
+  </>;
 };
 
 const NAV = [
@@ -152,24 +169,49 @@ function Dashboard({ data }) {
 }
 
 function TableView({ rows }) {
+  const [search, setSearch] = useState('');
+
+  const filtered = (rows||[]).filter(row =>
+    Object.values(row).some(val =>
+      String(val).toLowerCase().includes(search.toLowerCase())
+    )
+  );
+
   if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos para mostrar</div></div>;
   const headers = Object.keys(rows[0]);
-  return (
+
+  return <>
+    <div className="search-wrap">
+      <span className="search-icon">🔍</span>
+      <input
+        className="search-bar"
+        placeholder="Buscar por nombre, ID, estado..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+    </div>
+    {search && <div className="results-count">{filtered.length} resultado{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}</div>}
     <div className="table-wrap">
       <table>
         <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
         <tbody>
-          {rows.map((row,i)=>(
+          {filtered.map((row,i)=>(
             <tr key={i}>
               {headers.map(h=>(
-                <td key={h}>{h==='ESTADO' ? <Badge estado={row[h]}/> : (row[h]||'—')}</td>
+                <td key={h}>
+                  {h==='ESTADO'
+                    ? <Badge estado={row[h]}/>
+                    : <Highlight text={row[h]} search={search}/>
+                  }
+                </td>
               ))}
             </tr>
           ))}
+          {!filtered.length && <tr><td colSpan={headers.length} className="empty">Sin resultados para "{search}"</td></tr>}
         </tbody>
       </table>
     </div>
-  );
+  </>;
 }
 
 function Config({ creds, onSave }) {
