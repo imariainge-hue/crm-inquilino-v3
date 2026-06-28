@@ -7,7 +7,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', system-ui, sans-serif; transition: background 0.2s, color 0.2s; }
@@ -24,7 +23,6 @@
     body.dark .sync-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #00C49F; }
     body.dark .kpi-card { background: #111D2B; border: 1px solid #1E2D3D; }
     body.dark .table-wrap { background: #111D2B; border: 1px solid #1E2D3D; }
-    body.dark .chart-wrap { background: #111D2B; border: 1px solid #1E2D3D; }
     body.dark th { color: #4A6480; border-bottom: 1px solid #1E2D3D; }
     body.dark td { border-bottom: 1px solid #131F2B; color: #C8D8E8; }
     body.dark tr.clickable:hover td { background: #1A2D40; }
@@ -42,7 +40,6 @@
     body.dark .mobile-nav-item { color: #4A6480; }
     body.dark .mobile-nav-item.active { color: #00C49F; }
     body.dark .theme-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #E8EDF2; }
-    body.dark .chart-tooltip { background: #1A2D40 !important; border: 1px solid #1E2D3D !important; color: #E8EDF2 !important; }
     body.light { background: #F4F6F9; color: #1A2740; }
     body.light .sidebar { background: #FFFFFF; border-right: 1px solid #E0E7EF; }
     body.light .logo { border-bottom: 1px solid #E0E7EF; }
@@ -57,7 +54,6 @@
     body.light .kpi-card { background: #FFFFFF; border: 1px solid #E0E7EF; }
     body.light .kpi-label { color: #8AA5BE; }
     body.light .table-wrap { background: #FFFFFF; border: 1px solid #E0E7EF; }
-    body.light .chart-wrap { background: #FFFFFF; border: 1px solid #E0E7EF; }
     body.light th { color: #8AA5BE; border-bottom: 1px solid #E0E7EF; }
     body.light td { border-bottom: 1px solid #F0F4F8; color: #2A4A60; }
     body.light tr.clickable:hover td { background: #F0F4F8; }
@@ -82,31 +78,29 @@
     body.light .mobile-nav-item.active { color: #00916E; }
     body.light .theme-btn { background: #F0F4F8; border: 1px solid #E0E7EF; color: #1A2740; }
     .app { display: flex; height: 100vh; overflow: hidden; }
-    .sidebar { width: 220px; display: flex; flex-direction: column; flex-shrink: 0; }
+    .sidebar { width: 220px; display: flex; flex-direction: column; flex-shrink: 0; transition: background 0.2s; }
     .logo { padding: 24px 20px 16px; }
     .logo h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
     .logo p { font-size: 11px; margin-top: 2px; }
     .nav { padding: 12px 8px; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; font-weight: 400; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.15s; background: transparent; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; font-weight: 400; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.15s; background: transparent; position: relative; }
     .nav-item.active { font-weight: 600; }
     .nav-icon { font-size: 16px; width: 20px; text-align: center; }
     .nav-label { flex: 1; }
     .nav-badge { background: #FF6B6B; color: white; font-size: 10px; font-weight: 700; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center; }
+    .nav-badge.yellow { background: #F6C90E; color: #1A2740; }
     .sync-time { padding: 12px 20px; font-size: 10px; }
     .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
     .header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-shrink: 0; }
-    .header h2 { font-size: 18px; font-weight: 700; }
+    .header h2 { font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
     .sync-btn { padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; border: none; white-space: nowrap; }
     .theme-btn { padding: 7px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; border: none; }
     .content { flex: 1; overflow: auto; padding: 20px; }
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .kpi-card { border-radius: 12px; padding: 16px; }
+    .kpi-card { border-radius: 12px; padding: 16px; transition: background 0.2s; }
     .kpi-value { font-size: 26px; font-weight: 700; line-height: 1; }
     .kpi-label { font-size: 10px; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-    .chart-wrap { border-radius: 12px; padding: 20px; }
-    .chart-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; opacity: 0.6; }
     .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; margin-top: 0; }
     .table-wrap { border-radius: 12px; overflow: hidden; margin-bottom: 24px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 400px; }
@@ -159,7 +153,6 @@
       .header h2 { font-size: 16px; }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .kpi-value { font-size: 22px; }
-      .charts-grid { grid-template-columns: 1fr; }
       .perfil-header { flex-direction: column; align-items: flex-start; }
       .perfil-stats { margin-left: 0; }
     }
@@ -169,7 +162,6 @@
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
-const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } = Recharts;
 
 const fetchSheet = async (sheet, sheetId, apiKey) => {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
@@ -181,7 +173,12 @@ const fetchSheet = async (sheet, sheetId, apiKey) => {
 };
 
 const Badge = ({ estado }) => {
-  const map = { 'Al día':'green','PAGADO':'green','Pagado':'green','Resuelto':'green','PENDIENTE':'yellow','Pendiente':'yellow','Abierto':'yellow','VENCIDO':'red','Vencido':'red','Urgente':'red','En procesos':'blue','En proceso':'blue' };
+  const map = {
+    'Al día':'green','PAGADO':'green','Pagado':'green','Resuelto':'green',
+    'PENDIENTE':'yellow','Pendiente':'yellow','Abierto':'yellow',
+    'VENCIDO':'red','Vencido':'red','Urgente':'red',
+    'En procesos':'blue','En proceso':'blue',
+  };
   return <span className={`badge badge-${map[estado]||'blue'}`}>{estado||'—'}</span>;
 };
 
@@ -192,11 +189,10 @@ const Highlight = ({ text, search }) => {
   return <>{text.slice(0,idx)}<span className="highlight">{text.slice(idx,idx+search.length)}</span>{text.slice(idx+search.length)}</>;
 };
 
-function Dashboard({ data, dark }) {
+function Dashboard({ data }) {
   const pagosAlert = (data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
   const reclamosActivos = (data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
   const urgentes = (data.reclamos||[]).filter(r=>r.ESTADO==='Urgente').length;
-
   const kpis = [
     {label:'Inquilinos',value:(data.inquilinos||[]).length,color:'#4A9EFF'},
     {label:'Propiedades',value:(data.propiedades||[]).length,color:'#00C49F'},
@@ -204,67 +200,10 @@ function Dashboard({ data, dark }) {
     {label:'Reclamos activos',value:reclamosActivos,color:reclamosActivos>0?'#F6C90E':'#00C49F'},
   ];
   if (urgentes>0) kpis.push({label:'🚨 Urgentes',value:urgentes,color:'#FF6B6B'});
-
-  // Datos para gráfico de barras — pagos por período
-  const pagosPorMes = {};
-  (data.pagos||[]).forEach(p => {
-    const mes = p['MES CORRESPONDIENTE']||'Sin mes';
-    if (!pagosPorMes[mes]) pagosPorMes[mes] = { mes, pagados: 0, pendientes: 0 };
-    if (['PAGADO','Pagado'].includes(p.ESTADO)) pagosPorMes[mes].pagados++;
-    else if (p.MONTO) pagosPorMes[mes].pendientes++;
-  });
-  const barData = Object.values(pagosPorMes).slice(-6);
-
-  // Datos para gráfico de torta — estado de reclamos
-  const estadosReclamos = {};
-  (data.reclamos||[]).filter(r=>r.ESTADO).forEach(r => {
-    estadosReclamos[r.ESTADO] = (estadosReclamos[r.ESTADO]||0) + 1;
-  });
-  const pieData = Object.entries(estadosReclamos).map(([name, value]) => ({ name, value }));
-  const PIE_COLORS = ['#00C49F','#F6C90E','#FF6B6B','#4A9EFF','#A855F7'];
-
-  const axisColor = dark ? '#4A6480' : '#8AA5BE';
-  const tooltipStyle = dark
-    ? { backgroundColor: '#1A2D40', border: '1px solid #1E2D3D', color: '#E8EDF2', borderRadius: 8, fontSize: 12 }
-    : { backgroundColor: '#FFFFFF', border: '1px solid #E0E7EF', color: '#1A2740', borderRadius: 8, fontSize: 12 };
-
   return <>
     <div className="kpi-grid">
       {kpis.map((k,i)=><div key={i} className="kpi-card" style={{borderTop:`3px solid ${k.color}`}}><div className="kpi-value" style={{color:k.color}}>{k.value}</div><div className="kpi-label">{k.label}</div></div>)}
     </div>
-
-    <div className="charts-grid">
-      <div className="chart-wrap">
-        <div className="chart-title">Pagos por período</div>
-        {barData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={barData} margin={{top:0,right:0,left:-20,bottom:0}}>
-              <XAxis dataKey="mes" tick={{fill:axisColor,fontSize:10}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fill:axisColor,fontSize:10}} axisLine={false} tickLine={false}/>
-              <Tooltip contentStyle={tooltipStyle}/>
-              <Bar dataKey="pagados" name="Pagados" fill="#00C49F" radius={[4,4,0,0]}/>
-              <Bar dataKey="pendientes" name="Pendientes" fill="#FF6B6B" radius={[4,4,0,0]}/>
-            </BarChart>
-          </ResponsiveContainer>
-        ) : <div className="empty" style={{padding:'60px 0'}}>Sin datos de pagos</div>}
-      </div>
-
-      <div className="chart-wrap">
-        <div className="chart-title">Estado de reclamos</div>
-        {pieData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
-                {pieData.map((entry,i)=><Cell key={i} fill={PIE_COLORS[i%PIE_COLORS.length]}/>)}
-              </Pie>
-              <Tooltip contentStyle={tooltipStyle}/>
-              <Legend iconType="circle" iconSize={8} wrapperStyle={{fontSize:11,color:axisColor}}/>
-            </PieChart>
-          </ResponsiveContainer>
-        ) : <div className="empty" style={{padding:'60px 0'}}>Sin datos de reclamos</div>}
-      </div>
-    </div>
-
     <p className="section-title">Últimos reclamos</p>
     <div className="table-wrap"><table><thead><tr>{['ID Propiedad','ID Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
       <tbody>
@@ -272,7 +211,6 @@ function Dashboard({ data, dark }) {
         {!(data.reclamos||[]).filter(r=>r.DESCRIPCION).length&&<tr><td colSpan="5" className="empty">Sin reclamos</td></tr>}
       </tbody>
     </table></div>
-
     <p className="section-title">Últimos pagos</p>
     <div className="table-wrap"><table><thead><tr>{['Inquilino','ID Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
       <tbody>
@@ -289,6 +227,7 @@ function PerfilInquilino({ inquilino, data, onBack }) {
   const pagos = (data.pagos||[]).filter(p=>p['ID INQUILINO']===id);
   const reclamos = (data.reclamos||[]).filter(r=>r['ID INQUILINO']===id);
   const pagosPendientes = pagos.filter(p=>['PENDIENTE','Pendiente','VENCIDO','Vencido'].includes(p.ESTADO)).length;
+  const infoKeys = Object.keys(inquilino);
   return <>
     <button className="back-btn" onClick={onBack}>← Volver</button>
     <div className="perfil-header">
@@ -301,7 +240,7 @@ function PerfilInquilino({ inquilino, data, onBack }) {
       </div>
     </div>
     <p className="section-title">Datos</p>
-    <div className="perfil-info-grid" style={{marginBottom:20}}>{Object.keys(inquilino).map(k=><div key={k} className="perfil-info-item"><div className="perfil-info-label">{k}</div><div className="perfil-info-value">{inquilino[k]||'—'}</div></div>)}</div>
+    <div className="perfil-info-grid" style={{marginBottom:20}}>{infoKeys.map(k=><div key={k} className="perfil-info-item"><div className="perfil-info-label">{k}</div><div className="perfil-info-value">{inquilino[k]||'—'}</div></div>)}</div>
     <p className="section-title">Pagos</p>
     <div className="table-wrap"><table><thead><tr>{['ID Propiedad','Monto','Período','Vencimiento','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
       <tbody>{pagos.map((p,i)=><tr key={i}><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td>{p['Fecha vencimiento']||'—'}</td><td><Badge estado={p.ESTADO}/></td></tr>)}
@@ -392,18 +331,20 @@ function App() {
   }, [creds]);
 
   useEffect(() => { sync(); }, [sync]);
+
   const saveCreds = (c) => { setCreds(c); localStorage.setItem('crm_creds',JSON.stringify(c)); setView('dashboard'); };
 
+  // BADGES
   const pagosVencidos = (data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
   const reclamosActivos = (data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
 
   const NAV = [
-    {id:'dashboard',label:'Dashboard',icon:'📊',badge:0},
-    {id:'inquilinos',label:'Inquilinos',icon:'👥',badge:0},
-    {id:'propiedades',label:'Propiedades',icon:'🏠',badge:0},
-    {id:'pagos',label:'Pagos',icon:'💰',badge:pagosVencidos},
-    {id:'reclamos',label:'Reclamos',icon:'🔧',badge:reclamosActivos},
-    {id:'config',label:'Config',icon:'⚙️',badge:0},
+    {id:'dashboard', label:'Dashboard', icon:'📊', badge:0},
+    {id:'inquilinos', label:'Inquilinos', icon:'👥', badge:0},
+    {id:'propiedades', label:'Propiedades', icon:'🏠', badge:0},
+    {id:'pagos', label:'Pagos', icon:'💰', badge:pagosVencidos},
+    {id:'reclamos', label:'Reclamos', icon:'🔧', badge:reclamosActivos},
+    {id:'config', label:'Config', icon:'⚙️', badge:0},
   ];
 
   const titles = {dashboard:'Resumen',inquilinos:'Inquilinos',propiedades:'Propiedades',pagos:'Pagos',reclamos:'Reclamos',config:'Configuración'};
@@ -422,6 +363,7 @@ function App() {
       </nav>
       {lastSync&&<div className="sync-time">Última sync: {lastSync}</div>}
     </aside>
+
     <main className="main">
       <div className="header">
         <h2>{titles[view]}</h2>
@@ -433,7 +375,7 @@ function App() {
       <div className="content">
         {error&&<div className="alert alert-red">⚠️ {error}</div>}
         {!creds.sheetId&&view!=='config'&&<div className="alert alert-yellow">⚙️ Configurá tu Google Sheet. <a onClick={()=>setView('config')}>Ir a Configuración</a></div>}
-        {view==='dashboard'&&<Dashboard data={data} dark={dark}/>}
+        {view==='dashboard'&&<Dashboard data={data}/>}
         {view==='inquilinos'&&<InquilinosView rows={data.inquilinos} data={data}/>}
         {view==='propiedades'&&<TableView rows={data.propiedades}/>}
         {view==='pagos'&&<TableView rows={data.pagos}/>}
@@ -441,6 +383,7 @@ function App() {
         {view==='config'&&<Config creds={creds} onSave={saveCreds}/>}
       </div>
     </main>
+
     <nav className="mobile-nav">
       <div className="mobile-nav-inner">
         {NAV.map(item=>(
@@ -459,4 +402,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
-
