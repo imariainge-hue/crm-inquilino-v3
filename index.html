@@ -10,6 +10,26 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', system-ui, sans-serif; transition: background 0.2s, color 0.2s; }
+
+    /* ANIMACIONES */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .page-enter { animation: fadeSlideIn 0.25s ease forwards; }
+    .fade-in { animation: fadeIn 0.2s ease forwards; }
+
+    /* ROW COLORS */
+    tr.row-green td { background: #00C49F08 !important; border-left: 3px solid #00C49F; }
+    tr.row-yellow td { background: #F6C90E08 !important; border-left: 3px solid #F6C90E; }
+    tr.row-red td { background: #FF6B6B10 !important; border-left: 3px solid #FF6B6B; }
+    tr.row-blue td { background: #4A9EFF08 !important; border-left: 3px solid #4A9EFF; }
+    tr.row-green:first-child td, tr.row-yellow:first-child td, tr.row-red:first-child td, tr.row-blue:first-child td { border-left-width: 3px; }
+
     body.dark { background: #0F1923; color: #E8EDF2; }
     body.dark .sidebar { background: #111D2B; border-right: 1px solid #1E2D3D; }
     body.dark .logo { border-bottom: 1px solid #1E2D3D; }
@@ -23,14 +43,13 @@
     body.dark .sync-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #00C49F; }
     body.dark .kpi-card { background: #111D2B; border: 1px solid #1E2D3D; }
     body.dark .table-wrap { background: #111D2B; border: 1px solid #1E2D3D; }
+    body.dark .chart-wrap { background: #111D2B; border: 1px solid #1E2D3D; }
     body.dark th { color: #4A6480; border-bottom: 1px solid #1E2D3D; }
     body.dark td { border-bottom: 1px solid #131F2B; color: #C8D8E8; }
-    body.dark tr.clickable:hover td { background: #1A2D40; }
+    body.dark tr.clickable:hover td { background: #1A2D40 !important; }
     body.dark .search-bar { background: #0F1923; border: 1px solid #1E2D3D; color: #E8EDF2; }
-    body.dark .search-bar:focus { outline: 1px solid #00C49F; }
     body.dark .config-box { background: #111D2B; border: 1px solid #1E2D3D; }
     body.dark input { background: #0F1923; border: 1px solid #1E2D3D; color: #E8EDF2; }
-    body.dark input:focus { outline: 1px solid #00C49F; }
     body.dark .alert-yellow { background: #F6C90E10; border: 1px solid #F6C90E30; color: #F6C90E; }
     body.dark .alert-red { background: #FF6B6B10; border: 1px solid #FF6B6B30; color: #FF6B6B; }
     body.dark .back-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #8AA5BE; }
@@ -40,6 +59,8 @@
     body.dark .mobile-nav-item { color: #4A6480; }
     body.dark .mobile-nav-item.active { color: #00C49F; }
     body.dark .theme-btn { background: #1A2D40; border: 1px solid #1E2D3D; color: #E8EDF2; }
+    body.dark .bar-label { fill: #4A6480; }
+    body.dark .chart-legend span { color: #8AA5BE; }
     body.light { background: #F4F6F9; color: #1A2740; }
     body.light .sidebar { background: #FFFFFF; border-right: 1px solid #E0E7EF; }
     body.light .logo { border-bottom: 1px solid #E0E7EF; }
@@ -54,60 +75,65 @@
     body.light .kpi-card { background: #FFFFFF; border: 1px solid #E0E7EF; }
     body.light .kpi-label { color: #8AA5BE; }
     body.light .table-wrap { background: #FFFFFF; border: 1px solid #E0E7EF; }
+    body.light .chart-wrap { background: #FFFFFF; border: 1px solid #E0E7EF; }
     body.light th { color: #8AA5BE; border-bottom: 1px solid #E0E7EF; }
     body.light td { border-bottom: 1px solid #F0F4F8; color: #2A4A60; }
-    body.light tr.clickable:hover td { background: #F0F4F8; }
+    body.light tr.clickable:hover td { background: #F0F4F8 !important; }
     body.light .search-bar { background: #FFFFFF; border: 1px solid #E0E7EF; color: #1A2740; }
-    body.light .search-bar:focus { outline: 1px solid #00916E; }
     body.light .config-box { background: #FFFFFF; border: 1px solid #E0E7EF; }
     body.light input { background: #F4F6F9; border: 1px solid #E0E7EF; color: #1A2740; }
-    body.light input:focus { outline: 1px solid #00916E; }
     body.light .alert-yellow { background: #FFF8E1; border: 1px solid #F6C90E50; color: #B8860B; }
     body.light .alert-red { background: #FFF0F0; border: 1px solid #FF6B6B50; color: #C0392B; }
     body.light .back-btn { background: #F0F4F8; border: 1px solid #E0E7EF; color: #6B8299; }
     body.light .perfil-header { background: #FFFFFF; border: 1px solid #E0E7EF; }
     body.light .perfil-info-item { background: #F4F6F9; border: 1px solid #E0E7EF; }
-    body.light .perfil-id { color: #8AA5BE; }
     body.light .section-title { color: #8AA5BE; }
-    body.light .results-count { color: #8AA5BE; }
-    body.light .click-hint { color: #8AA5BE; }
-    body.light .empty { color: #8AA5BE; }
-    body.light .hint { color: #8AA5BE; }
+    body.light .results-count, body.light .click-hint, body.light .empty, body.light .hint { color: #8AA5BE; }
     body.light .mobile-nav { background: #FFFFFF; border-top: 1px solid #E0E7EF; }
     body.light .mobile-nav-item { color: #8AA5BE; }
     body.light .mobile-nav-item.active { color: #00916E; }
     body.light .theme-btn { background: #F0F4F8; border: 1px solid #E0E7EF; color: #1A2740; }
+    body.light .bar-label { fill: #8AA5BE; }
+    body.light .chart-legend span { color: #6B8299; }
     .app { display: flex; height: 100vh; overflow: hidden; }
-    .sidebar { width: 220px; display: flex; flex-direction: column; flex-shrink: 0; transition: background 0.2s; }
+    .sidebar { width: 220px; display: flex; flex-direction: column; flex-shrink: 0; }
     .logo { padding: 24px 20px 16px; }
     .logo h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
     .logo p { font-size: 11px; margin-top: 2px; }
     .nav { padding: 12px 8px; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; font-weight: 400; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.15s; background: transparent; position: relative; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; font-size: 13px; border: none; width: 100%; text-align: left; transition: all 0.18s; background: transparent; }
     .nav-item.active { font-weight: 600; }
     .nav-icon { font-size: 16px; width: 20px; text-align: center; }
     .nav-label { flex: 1; }
     .nav-badge { background: #FF6B6B; color: white; font-size: 10px; font-weight: 700; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center; }
-    .nav-badge.yellow { background: #F6C90E; color: #1A2740; }
     .sync-time { padding: 12px 20px; font-size: 10px; }
     .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
     .header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-shrink: 0; }
-    .header h2 { font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header h2 { font-size: 18px; font-weight: 700; }
     .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
-    .sync-btn { padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; border: none; white-space: nowrap; }
-    .theme-btn { padding: 7px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; border: none; }
+    .sync-btn { padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; border: none; white-space: nowrap; transition: opacity 0.15s; }
+    .sync-btn:hover { opacity: 0.85; }
+    .theme-btn { padding: 7px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; border: none; transition: transform 0.2s; }
+    .theme-btn:hover { transform: rotate(20deg); }
     .content { flex: 1; overflow: auto; padding: 20px; }
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .kpi-card { border-radius: 12px; padding: 16px; transition: background 0.2s; }
+    .kpi-card { border-radius: 12px; padding: 16px; transition: transform 0.18s, box-shadow 0.18s; cursor: default; }
+    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #0006; }
     .kpi-value { font-size: 26px; font-weight: 700; line-height: 1; }
     .kpi-label { font-size: 10px; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; margin-top: 0; }
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .chart-wrap { border-radius: 12px; padding: 20px; }
+    .chart-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; opacity: 0.6; }
+    .chart-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+    .chart-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+    .chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
     .table-wrap { border-radius: 12px; overflow: hidden; margin-bottom: 24px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 400px; }
     th { text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
-    td { padding: 11px 14px; font-size: 13px; }
+    td { padding: 11px 14px; font-size: 13px; transition: background 0.15s; }
     tr:last-child td { border-bottom: none; }
-    tr.clickable { cursor: pointer; transition: background 0.1s; }
+    tr.clickable { cursor: pointer; }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .badge-green { color: #00C49F; background: #00C49F18; }
     .badge-yellow { color: #D4A017; background: #F6C90E18; }
@@ -119,32 +145,36 @@
     .config-box { border-radius: 12px; padding: 24px; max-width: 500px; }
     label { font-size: 12px; margin-bottom: 4px; display: block; margin-top: 12px; }
     input { width: 100%; border-radius: 8px; padding: 9px 12px; font-size: 13px; }
-    .save-btn { background: #00C49F; border: none; color: #0F1923; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 16px; }
+    .save-btn { background: #00C49F; border: none; color: #0F1923; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 16px; transition: opacity 0.15s; }
+    .save-btn:hover { opacity: 0.85; }
     .hint { font-size: 11px; margin-top: 12px; line-height: 1.6; }
     .search-wrap { position: relative; margin-bottom: 12px; }
-    .search-bar { width: 100%; border-radius: 8px; padding: 10px 14px 10px 36px; font-size: 13px; }
+    .search-bar { width: 100%; border-radius: 8px; padding: 10px 14px 10px 36px; font-size: 13px; transition: outline 0.15s; }
     .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.5; }
     .results-count { font-size: 11px; margin-bottom: 8px; }
     .highlight { background: #00C49F30; color: #00C49F; border-radius: 2px; padding: 0 2px; }
     .click-hint { font-size: 11px; margin-bottom: 10px; }
-    .back-btn { border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; }
+    .back-btn { border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; transition: opacity 0.15s; }
+    .back-btn:hover { opacity: 0.8; }
     .perfil-header { border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
     .perfil-avatar { width: 52px; height: 52px; border-radius: 50%; background: #00C49F20; border: 2px solid #00C49F; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .perfil-nombre { font-size: 18px; font-weight: 700; }
-    .perfil-id { font-size: 12px; margin-top: 3px; }
+    .perfil-id { font-size: 12px; margin-top: 3px; opacity: 0.6; }
     .perfil-stats { display: flex; gap: 20px; margin-left: auto; }
     .perfil-stat { text-align: center; }
     .perfil-stat-value { font-size: 20px; font-weight: 700; }
     .perfil-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6; }
     .perfil-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
-    .perfil-info-item { border-radius: 8px; padding: 10px 14px; }
+    .perfil-info-item { border-radius: 8px; padding: 10px 14px; transition: transform 0.15s; }
+    .perfil-info-item:hover { transform: translateY(-1px); }
     .perfil-info-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.5; margin-bottom: 4px; }
     .perfil-info-value { font-size: 13px; }
     .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; padding: 8px 0 12px; }
     .mobile-nav-inner { display: flex; justify-content: space-around; }
-    .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 8px; font-size: 10px; transition: all 0.15s; position: relative; }
+    .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 4px 8px; font-size: 10px; position: relative; transition: transform 0.15s; }
+    .mobile-nav-item:active { transform: scale(0.92); }
     .mobile-nav-item .mn-icon { font-size: 20px; }
-    .mobile-badge { position: absolute; top: 0; right: 2px; background: #FF6B6B; color: white; font-size: 9px; font-weight: 700; border-radius: 8px; padding: 1px 4px; min-width: 14px; text-align: center; }
+    .mobile-badge { position: absolute; top: 0; right: 2px; background: #FF6B6B; color: white; font-size: 9px; font-weight: 700; border-radius: 8px; padding: 1px 4px; }
     @media (max-width: 680px) {
       .sidebar { display: none; }
       .mobile-nav { display: block; }
@@ -152,7 +182,7 @@
       .header { padding: 12px 16px; }
       .header h2 { font-size: 16px; }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .kpi-value { font-size: 22px; }
+      .charts-grid { grid-template-columns: 1fr; }
       .perfil-header { flex-direction: column; align-items: flex-start; }
       .perfil-stats { margin-left: 0; }
     }
@@ -161,7 +191,7 @@
 <body class="dark">
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+const { useState, useEffect, useCallback, useRef } = React;
 
 const fetchSheet = async (sheet, sheetId, apiKey) => {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
@@ -172,13 +202,17 @@ const fetchSheet = async (sheet, sheetId, apiKey) => {
   return rows.map(row => Object.fromEntries((headers||[]).map((h,i) => [h, row[i]||''])));
 };
 
+const getRowClass = (estado) => {
+  if (!estado) return '';
+  const e = estado.toUpperCase();
+  if (['PAGADO','AL DÍA','RESUELTO'].includes(e)) return 'row-green';
+  if (['PENDIENTE','ABIERTO','EN PROCESOS','EN PROCESO'].includes(e)) return 'row-yellow';
+  if (['VENCIDO','URGENTE'].includes(e)) return 'row-red';
+  return 'row-blue';
+};
+
 const Badge = ({ estado }) => {
-  const map = {
-    'Al día':'green','PAGADO':'green','Pagado':'green','Resuelto':'green',
-    'PENDIENTE':'yellow','Pendiente':'yellow','Abierto':'yellow',
-    'VENCIDO':'red','Vencido':'red','Urgente':'red',
-    'En procesos':'blue','En proceso':'blue',
-  };
+  const map = {'Al día':'green','PAGADO':'green','Pagado':'green','Resuelto':'green','PENDIENTE':'yellow','Pendiente':'yellow','Abierto':'yellow','VENCIDO':'red','Vencido':'red','Urgente':'red','En procesos':'blue','En proceso':'blue'};
   return <span className={`badge badge-${map[estado]||'blue'}`}>{estado||'—'}</span>;
 };
 
@@ -189,46 +223,152 @@ const Highlight = ({ text, search }) => {
   return <>{text.slice(0,idx)}<span className="highlight">{text.slice(idx,idx+search.length)}</span>{text.slice(idx+search.length)}</>;
 };
 
-function Dashboard({ data }) {
-  const pagosAlert = (data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
-  const reclamosActivos = (data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
-  const urgentes = (data.reclamos||[]).filter(r=>r.ESTADO==='Urgente').length;
-  const kpis = [
+function PageWrapper({ children }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.classList.add('page-enter');
+    }
+  }, []);
+  return <div ref={ref}>{children}</div>;
+}
+
+function BarChart({ data, dark }) {
+  if (!data||!data.length) return <div className="empty">Sin datos</div>;
+  const W=100, H=140, pad=24;
+  const max = Math.max(...data.map(d=>Math.max(d.pagados,d.pendientes)),1);
+  const bw = (W-pad*2)/(data.length*3+1);
+  const axisColor = dark?'#4A6480':'#8AA5BE';
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:160}}>
+      {data.map((d,i)=>{
+        const x = pad+i*(bw*3+bw*0.5);
+        const hP = (d.pagados/max)*(H-pad-20);
+        const hR = (d.pendientes/max)*(H-pad-20);
+        return (
+          <g key={i}>
+            <rect x={x} y={H-pad-hP} width={bw} height={hP} fill="#00C49F" rx="1" style={{transition:'height 0.5s ease, y 0.5s ease'}}/>
+            <rect x={x+bw+1} y={H-pad-hR} width={bw} height={hR} fill="#FF6B6B" rx="1" style={{transition:'height 0.5s ease, y 0.5s ease'}}/>
+            <text x={x+bw} y={H-pad+10} textAnchor="middle" fontSize="3.5" fill={axisColor}>{d.mes?.slice(0,3)||'?'}</text>
+          </g>
+        );
+      })}
+      <line x1={pad} y1={H-pad} x2={W-4} y2={H-pad} stroke={axisColor} strokeWidth="0.5"/>
+    </svg>
+  );
+}
+
+function PieChart({ data, dark }) {
+  if (!data||!data.length) return <div className="empty">Sin datos</div>;
+  const COLORS=['#00C49F','#F6C90E','#FF6B6B','#4A9EFF','#A855F7'];
+  const total=data.reduce((s,d)=>s+d.value,0);
+  let angle=-Math.PI/2;
+  const cx=50,cy=50,r=35,ri=20;
+  const slices=data.map((d,i)=>{
+    const a=(d.value/total)*Math.PI*2;
+    const x1=cx+r*Math.cos(angle),y1=cy+r*Math.sin(angle);
+    const x2=cx+r*Math.cos(angle+a),y2=cy+r*Math.sin(angle+a);
+    const xi1=cx+ri*Math.cos(angle),yi1=cy+ri*Math.sin(angle);
+    const xi2=cx+ri*Math.cos(angle+a),yi2=cy+ri*Math.sin(angle+a);
+    const large=a>Math.PI?1:0;
+    const path=`M${xi1},${yi1} L${x1},${y1} A${r},${r},0,${large},1,${x2},${y2} L${xi2},${yi2} A${ri},${ri},0,${large},0,${xi1},${yi1}`;
+    angle+=a;
+    return {path,color:COLORS[i%COLORS.length],label:d.name,value:d.value};
+  });
+  return (
+    <div>
+      <svg viewBox="0 0 100 100" style={{width:'100%',height:140}}>
+        {slices.map((s,i)=><path key={i} d={s.path} fill={s.color} style={{transition:'opacity 0.3s'}}/>)}
+        <text x={cx} y={cy+2} textAnchor="middle" fontSize="7" fill={dark?'#E8EDF2':'#1A2740'} fontWeight="700">{total}</text>
+        <text x={cx} y={cy+8} textAnchor="middle" fontSize="4" fill={dark?'#4A6480':'#8AA5BE'}>total</text>
+      </svg>
+      <div className="chart-legend">
+        {slices.map((s,i)=>(
+          <div key={i} className="chart-legend-item">
+            <div className="chart-legend-dot" style={{background:s.color}}></div>
+            <span>{s.label} ({s.value})</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ data, dark }) {
+  const pagosAlert=(data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
+  const reclamosActivos=(data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
+  const urgentes=(data.reclamos||[]).filter(r=>r.ESTADO==='Urgente').length;
+  const kpis=[
     {label:'Inquilinos',value:(data.inquilinos||[]).length,color:'#4A9EFF'},
     {label:'Propiedades',value:(data.propiedades||[]).length,color:'#00C49F'},
     {label:'Pagos pendientes',value:pagosAlert,color:pagosAlert>0?'#FF6B6B':'#00C49F'},
     {label:'Reclamos activos',value:reclamosActivos,color:reclamosActivos>0?'#F6C90E':'#00C49F'},
   ];
-  if (urgentes>0) kpis.push({label:'🚨 Urgentes',value:urgentes,color:'#FF6B6B'});
-  return <>
+  if(urgentes>0) kpis.push({label:'🚨 Urgentes',value:urgentes,color:'#FF6B6B'});
+
+  const pagosPorMes={};
+  (data.pagos||[]).forEach(p=>{
+    const mes=p['MES CORRESPONDIENTE']||'?';
+    if(!pagosPorMes[mes]) pagosPorMes[mes]={mes,pagados:0,pendientes:0};
+    if(['PAGADO','Pagado'].includes(p.ESTADO)) pagosPorMes[mes].pagados++;
+    else if(p.MONTO) pagosPorMes[mes].pendientes++;
+  });
+  const barData=Object.values(pagosPorMes).slice(-5);
+
+  const estadosReclamos={};
+  (data.reclamos||[]).filter(r=>r.ESTADO).forEach(r=>{estadosReclamos[r.ESTADO]=(estadosReclamos[r.ESTADO]||0)+1;});
+  const pieData=Object.entries(estadosReclamos).map(([name,value])=>({name,value}));
+
+  return <PageWrapper>
     <div className="kpi-grid">
       {kpis.map((k,i)=><div key={i} className="kpi-card" style={{borderTop:`3px solid ${k.color}`}}><div className="kpi-value" style={{color:k.color}}>{k.value}</div><div className="kpi-label">{k.label}</div></div>)}
+    </div>
+    <div className="charts-grid">
+      <div className="chart-wrap">
+        <div className="chart-title">Pagos por período</div>
+        <BarChart data={barData} dark={dark}/>
+        <div className="chart-legend" style={{marginTop:8}}>
+          <div className="chart-legend-item"><div className="chart-legend-dot" style={{background:'#00C49F'}}></div><span>Pagados</span></div>
+          <div className="chart-legend-item"><div className="chart-legend-dot" style={{background:'#FF6B6B'}}></div><span>Pendientes</span></div>
+        </div>
+      </div>
+      <div className="chart-wrap">
+        <div className="chart-title">Estado de reclamos</div>
+        <PieChart data={pieData} dark={dark}/>
+      </div>
     </div>
     <p className="section-title">Últimos reclamos</p>
     <div className="table-wrap"><table><thead><tr>{['ID Propiedad','ID Inquilino','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
       <tbody>
-        {(data.reclamos||[]).filter(r=>r.DESCRIPCION).slice(0,5).map((r,i)=><tr key={i}><td>{r['ID PROPIEDAD']||'—'}</td><td>{r['ID INQUILINO']||'—'}</td><td>{r.DESCRIPCION||'—'}</td><td><Badge estado={r.ESTADO}/></td><td>{r.FECHA||'—'}</td></tr>)}
+        {(data.reclamos||[]).filter(r=>r.DESCRIPCION).slice(0,5).map((r,i)=>(
+          <tr key={i} className={getRowClass(r.ESTADO)}>
+            <td>{r['ID PROPIEDAD']||'—'}</td><td>{r['ID INQUILINO']||'—'}</td><td>{r.DESCRIPCION||'—'}</td><td><Badge estado={r.ESTADO}/></td><td>{r.FECHA||'—'}</td>
+          </tr>
+        ))}
         {!(data.reclamos||[]).filter(r=>r.DESCRIPCION).length&&<tr><td colSpan="5" className="empty">Sin reclamos</td></tr>}
       </tbody>
     </table></div>
     <p className="section-title">Últimos pagos</p>
     <div className="table-wrap"><table><thead><tr>{['Inquilino','ID Propiedad','Monto','Período','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
       <tbody>
-        {(data.pagos||[]).filter(p=>p.MONTO).slice(0,5).map((p,i)=><tr key={i}><td>{p['nombre inquilino']||p['NOMBRE INQUILINO']||p['ID INQUILINO']||'—'}</td><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td><Badge estado={p.ESTADO}/></td></tr>)}
+        {(data.pagos||[]).filter(p=>p.MONTO).slice(0,5).map((p,i)=>(
+          <tr key={i} className={getRowClass(p.ESTADO)}>
+            <td>{p['nombre inquilino']||p['NOMBRE INQUILINO']||p['ID INQUILINO']||'—'}</td><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td><Badge estado={p.ESTADO}/></td>
+          </tr>
+        ))}
         {!(data.pagos||[]).filter(p=>p.MONTO).length&&<tr><td colSpan="5" className="empty">Sin pagos</td></tr>}
       </tbody>
     </table></div>
-  </>;
+  </PageWrapper>;
 }
 
 function PerfilInquilino({ inquilino, data, onBack }) {
-  const id = inquilino['ID INQUILINO']||inquilino['ID']||inquilino['INQUILINO']||'';
-  const nombre = inquilino['NOMBRE COMPLETO']||inquilino['NOMBRE']||inquilino['nombre inquilino']||id;
-  const pagos = (data.pagos||[]).filter(p=>p['ID INQUILINO']===id);
-  const reclamos = (data.reclamos||[]).filter(r=>r['ID INQUILINO']===id);
-  const pagosPendientes = pagos.filter(p=>['PENDIENTE','Pendiente','VENCIDO','Vencido'].includes(p.ESTADO)).length;
-  const infoKeys = Object.keys(inquilino);
-  return <>
+  const id=inquilino['ID INQUILINO']||inquilino['ID']||inquilino['INQUILINO']||'';
+  const nombre=inquilino['NOMBRE COMPLETO']||inquilino['NOMBRE']||id;
+  const pagos=(data.pagos||[]).filter(p=>p['ID INQUILINO']===id);
+  const reclamos=(data.reclamos||[]).filter(r=>r['ID INQUILINO']===id);
+  const pagosPendientes=pagos.filter(p=>['PENDIENTE','Pendiente','VENCIDO','Vencido'].includes(p.ESTADO)).length;
+  return <PageWrapper>
     <button className="back-btn" onClick={onBack}>← Volver</button>
     <div className="perfil-header">
       <div className="perfil-avatar">👤</div>
@@ -240,85 +380,85 @@ function PerfilInquilino({ inquilino, data, onBack }) {
       </div>
     </div>
     <p className="section-title">Datos</p>
-    <div className="perfil-info-grid" style={{marginBottom:20}}>{infoKeys.map(k=><div key={k} className="perfil-info-item"><div className="perfil-info-label">{k}</div><div className="perfil-info-value">{inquilino[k]||'—'}</div></div>)}</div>
+    <div className="perfil-info-grid" style={{marginBottom:20}}>{Object.keys(inquilino).map(k=><div key={k} className="perfil-info-item"><div className="perfil-info-label">{k}</div><div className="perfil-info-value">{inquilino[k]||'—'}</div></div>)}</div>
     <p className="section-title">Pagos</p>
     <div className="table-wrap"><table><thead><tr>{['ID Propiedad','Monto','Período','Vencimiento','Estado'].map(h=><th key={h}>{h}</th>)}</tr></thead>
-      <tbody>{pagos.map((p,i)=><tr key={i}><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td>{p['Fecha vencimiento']||'—'}</td><td><Badge estado={p.ESTADO}/></td></tr>)}
+      <tbody>{pagos.map((p,i)=><tr key={i} className={getRowClass(p.ESTADO)}><td>{p['ID PROPIEDAD']||'—'}</td><td>{p.MONTO||'—'}</td><td>{p['MES CORRESPONDIENTE']||'—'}</td><td>{p['Fecha vencimiento']||'—'}</td><td><Badge estado={p.ESTADO}/></td></tr>)}
       {!pagos.length&&<tr><td colSpan="5" className="empty">Sin pagos</td></tr>}</tbody>
     </table></div>
     <p className="section-title">Reclamos</p>
     <div className="table-wrap"><table><thead><tr>{['ID Propiedad','Tipo','Descripción','Estado','Fecha'].map(h=><th key={h}>{h}</th>)}</tr></thead>
-      <tbody>{reclamos.map((r,i)=><tr key={i}><td>{r['ID PROPIEDAD']||'—'}</td><td>{r.TIPO||'—'}</td><td>{r.DESCRIPCION||'—'}</td><td><Badge estado={r.ESTADO}/></td><td>{r.FECHA||'—'}</td></tr>)}
+      <tbody>{reclamos.map((r,i)=><tr key={i} className={getRowClass(r.ESTADO)}><td>{r['ID PROPIEDAD']||'—'}</td><td>{r.TIPO||'—'}</td><td>{r.DESCRIPCION||'—'}</td><td><Badge estado={r.ESTADO}/></td><td>{r.FECHA||'—'}</td></tr>)}
       {!reclamos.length&&<tr><td colSpan="5" className="empty">Sin reclamos</td></tr>}</tbody>
     </table></div>
-  </>;
+  </PageWrapper>;
 }
 
 function InquilinosView({ rows, data }) {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
-  if (selected) return <PerfilInquilino inquilino={selected} data={data} onBack={()=>setSelected(null)}/>;
-  const filtered = (rows||[]).filter(row=>Object.values(row).some(v=>String(v).toLowerCase().includes(search.toLowerCase())));
-  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos</div></div>;
-  const headers = Object.keys(rows[0]);
-  return <>
+  if(selected) return <PerfilInquilino inquilino={selected} data={data} onBack={()=>setSelected(null)}/>;
+  const filtered=(rows||[]).filter(row=>Object.values(row).some(v=>String(v).toLowerCase().includes(search.toLowerCase())));
+  if(!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos</div></div>;
+  const headers=Object.keys(rows[0]);
+  return <PageWrapper>
     <div className="search-wrap"><span className="search-icon">🔍</span><input className="search-bar" placeholder="Buscar por nombre, ID..." value={search} onChange={e=>setSearch(e.target.value)}/></div>
     {search&&<div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''}</div>}
     <div className="click-hint">👆 Clickeá en un inquilino para ver su resumen</div>
     <div className="table-wrap"><table>
       <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
-      <tbody>{filtered.map((row,i)=><tr key={i} className="clickable" onClick={()=>setSelected(row)}>{headers.map(h=><td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>)}</tr>)}
+      <tbody>{filtered.map((row,i)=><tr key={i} className={`clickable ${getRowClass(row.ESTADO)}`} onClick={()=>setSelected(row)}>{headers.map(h=><td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>)}</tr>)}
       {!filtered.length&&<tr><td colSpan={headers.length} className="empty">Sin resultados</td></tr>}</tbody>
     </table></div>
-  </>;
+  </PageWrapper>;
 }
 
 function TableView({ rows }) {
   const [search, setSearch] = useState('');
-  const filtered = (rows||[]).filter(row=>Object.values(row).some(v=>String(v).toLowerCase().includes(search.toLowerCase())));
-  if (!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos</div></div>;
-  const headers = Object.keys(rows[0]);
-  return <>
+  const filtered=(rows||[]).filter(row=>Object.values(row).some(v=>String(v).toLowerCase().includes(search.toLowerCase())));
+  if(!rows||!rows.length) return <div className="table-wrap"><div className="empty">Sin datos</div></div>;
+  const headers=Object.keys(rows[0]);
+  return <PageWrapper>
     <div className="search-wrap"><span className="search-icon">🔍</span><input className="search-bar" placeholder="Buscar..." value={search} onChange={e=>setSearch(e.target.value)}/></div>
     {search&&<div className="results-count">{filtered.length} resultado{filtered.length!==1?'s':''}</div>}
     <div className="table-wrap"><table>
       <thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead>
-      <tbody>{filtered.map((row,i)=><tr key={i}>{headers.map(h=><td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>)}</tr>)}
+      <tbody>{filtered.map((row,i)=><tr key={i} className={getRowClass(row.ESTADO)}>{headers.map(h=><td key={h}>{h==='ESTADO'?<Badge estado={row[h]}/>:<Highlight text={row[h]} search={search}/>}</td>)}</tr>)}
       {!filtered.length&&<tr><td colSpan={headers.length} className="empty">Sin resultados</td></tr>}</tbody>
     </table></div>
-  </>;
+  </PageWrapper>;
 }
 
 function Config({ creds, onSave }) {
-  const [sheetId, setSheetId] = useState(creds.sheetId||'');
-  const [apiKey, setApiKey] = useState(creds.apiKey||'');
-  return <div className="config-box">
+  const [sheetId, setSheetId]=useState(creds.sheetId||'');
+  const [apiKey, setApiKey]=useState(creds.apiKey||'');
+  return <PageWrapper><div className="config-box">
     <p className="section-title" style={{marginTop:0}}>Conexión con Google Sheets</p>
     <label>Sheet ID</label><input value={sheetId} onChange={e=>setSheetId(e.target.value)} placeholder="1BxiMVs0..."/>
     <label>API Key</label><input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="AIzaSy..."/>
     <br/><button className="save-btn" onClick={()=>onSave({sheetId,apiKey})}>Guardar y conectar</button>
-    <p className="hint">El Sheet ID está en la URL de tu Google Sheet.<br/>Las hojas deben llamarse: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.</p>
-  </div>;
+    <p className="hint">El Sheet ID está en la URL de tu Google Sheet.<br/>Las hojas: INQUILINOS, PROPIEDADES, PAGOS, RECLAMOS.</p>
+  </div></PageWrapper>;
 }
 
 function App() {
-  const [view, setView] = useState('dashboard');
-  const [data, setData] = useState({inquilinos:[],propiedades:[],pagos:[],reclamos:[]});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [lastSync, setLastSync] = useState(null);
-  const [dark, setDark] = useState(true);
-  const [creds, setCreds] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('crm_creds')||'{}'); } catch { return {}; }
+  const [view, setView]=useState('dashboard');
+  const [data, setData]=useState({inquilinos:[],propiedades:[],pagos:[],reclamos:[]});
+  const [loading, setLoading]=useState(false);
+  const [error, setError]=useState(null);
+  const [lastSync, setLastSync]=useState(null);
+  const [dark, setDark]=useState(true);
+  const [creds, setCreds]=useState(()=>{
+    try{return JSON.parse(localStorage.getItem('crm_creds')||'{}');}catch{return {};}
   });
 
-  useEffect(() => { document.body.className = dark?'dark':'light'; }, [dark]);
+  useEffect(()=>{document.body.className=dark?'dark':'light';},[dark]);
 
-  const sync = useCallback(async () => {
-    if (!creds.sheetId||!creds.apiKey) return;
+  const sync=useCallback(async()=>{
+    if(!creds.sheetId||!creds.apiKey) return;
     setLoading(true); setError(null);
-    try {
-      const [inquilinos,propiedades,pagos,reclamos] = await Promise.all([
+    try{
+      const [inquilinos,propiedades,pagos,reclamos]=await Promise.all([
         fetchSheet('INQUILINOS',creds.sheetId,creds.apiKey),
         fetchSheet('PROPIEDADES',creds.sheetId,creds.apiKey),
         fetchSheet('PAGOS',creds.sheetId,creds.apiKey),
@@ -326,28 +466,26 @@ function App() {
       ]);
       setData({inquilinos,propiedades,pagos,reclamos});
       setLastSync(new Date().toLocaleTimeString('es-AR'));
-    } catch(e) { setError(e.message); }
+    }catch(e){setError(e.message);}
     setLoading(false);
-  }, [creds]);
+  },[creds]);
 
-  useEffect(() => { sync(); }, [sync]);
+  useEffect(()=>{sync();},[sync]);
+  const saveCreds=(c)=>{setCreds(c);localStorage.setItem('crm_creds',JSON.stringify(c));setView('dashboard');};
 
-  const saveCreds = (c) => { setCreds(c); localStorage.setItem('crm_creds',JSON.stringify(c)); setView('dashboard'); };
+  const pagosVencidos=(data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
+  const reclamosActivos=(data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
 
-  // BADGES
-  const pagosVencidos = (data.pagos||[]).filter(p=>['VENCIDO','PENDIENTE','Vencido','Pendiente'].includes(p.ESTADO)).length;
-  const reclamosActivos = (data.reclamos||[]).filter(r=>['Abierto','Urgente','En procesos','En proceso'].includes(r.ESTADO)).length;
-
-  const NAV = [
-    {id:'dashboard', label:'Dashboard', icon:'📊', badge:0},
-    {id:'inquilinos', label:'Inquilinos', icon:'👥', badge:0},
-    {id:'propiedades', label:'Propiedades', icon:'🏠', badge:0},
-    {id:'pagos', label:'Pagos', icon:'💰', badge:pagosVencidos},
-    {id:'reclamos', label:'Reclamos', icon:'🔧', badge:reclamosActivos},
-    {id:'config', label:'Config', icon:'⚙️', badge:0},
+  const NAV=[
+    {id:'dashboard',label:'Dashboard',icon:'📊',badge:0},
+    {id:'inquilinos',label:'Inquilinos',icon:'👥',badge:0},
+    {id:'propiedades',label:'Propiedades',icon:'🏠',badge:0},
+    {id:'pagos',label:'Pagos',icon:'💰',badge:pagosVencidos},
+    {id:'reclamos',label:'Reclamos',icon:'🔧',badge:reclamosActivos},
+    {id:'config',label:'Config',icon:'⚙️',badge:0},
   ];
 
-  const titles = {dashboard:'Resumen',inquilinos:'Inquilinos',propiedades:'Propiedades',pagos:'Pagos',reclamos:'Reclamos',config:'Configuración'};
+  const titles={dashboard:'Resumen',inquilinos:'Inquilinos',propiedades:'Propiedades',pagos:'Pagos',reclamos:'Reclamos',config:'Configuración'};
 
   return <div className="app">
     <aside className="sidebar">
@@ -363,7 +501,6 @@ function App() {
       </nav>
       {lastSync&&<div className="sync-time">Última sync: {lastSync}</div>}
     </aside>
-
     <main className="main">
       <div className="header">
         <h2>{titles[view]}</h2>
@@ -375,7 +512,7 @@ function App() {
       <div className="content">
         {error&&<div className="alert alert-red">⚠️ {error}</div>}
         {!creds.sheetId&&view!=='config'&&<div className="alert alert-yellow">⚙️ Configurá tu Google Sheet. <a onClick={()=>setView('config')}>Ir a Configuración</a></div>}
-        {view==='dashboard'&&<Dashboard data={data}/>}
+        {view==='dashboard'&&<Dashboard data={data} dark={dark}/>}
         {view==='inquilinos'&&<InquilinosView rows={data.inquilinos} data={data}/>}
         {view==='propiedades'&&<TableView rows={data.propiedades}/>}
         {view==='pagos'&&<TableView rows={data.pagos}/>}
@@ -383,7 +520,6 @@ function App() {
         {view==='config'&&<Config creds={creds} onSave={saveCreds}/>}
       </div>
     </main>
-
     <nav className="mobile-nav">
       <div className="mobile-nav-inner">
         {NAV.map(item=>(
